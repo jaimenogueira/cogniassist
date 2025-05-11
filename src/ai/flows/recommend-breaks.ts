@@ -45,6 +45,12 @@ const RecommendBreaksOutputSchema = z.object({
 });
 export type RecommendBreaksOutput = z.infer<typeof RecommendBreaksOutputSchema>;
 
+const defaultBreakRecommendation: RecommendBreaksOutput = {
+  breakRecommendation: "Consider taking a short 5-10 minute break to stretch or walk around.",
+  productivityTechnique: "Try the Pomodoro Technique: work for 25 minutes, then take a 5-minute break.",
+  reasoning: "Default recommendation provided as AI suggestions could not be loaded. Regular breaks can help maintain focus and productivity."
+};
+
 export async function recommendBreaks(input: RecommendBreaksInput): Promise<RecommendBreaksOutput> {
   return recommendBreaksFlow(input);
 }
@@ -109,9 +115,18 @@ const recommendBreaksFlow = ai.defineFlow<
     inputSchema: RecommendBreaksInputSchema,
     outputSchema: RecommendBreaksOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  async (input: RecommendBreaksInput) => {
+    try {
+      const {output} = await prompt(input);
+      if (output && output.breakRecommendation && output.productivityTechnique && output.reasoning) {
+        return output;
+      }
+      console.warn("AI output for recommendBreaksFlow was incomplete, returning default.");
+      return defaultBreakRecommendation;
+    } catch (error) {
+      console.error("Error in recommendBreaksFlow calling prompt:", error);
+      // Fallback to default suggestions if AI fails or throws an error
+      return defaultBreakRecommendation;
+    }
   }
 );
-

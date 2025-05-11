@@ -28,6 +28,14 @@ const GenerateMemoryTipsOutputSchema = z.object({
 });
 export type GenerateMemoryTipsOutput = z.infer<typeof GenerateMemoryTipsOutputSchema>;
 
+const defaultMemoryTips: GenerateMemoryTipsOutput = {
+    memoryTips: [
+        "Break routines into smaller, manageable sections.",
+        "Associate new information with things you already know.",
+        "Practice mindfulness to improve focus and memory encoding."
+    ]
+};
+
 export async function generateMemoryTips(input: GenerateMemoryTipsInput): Promise<GenerateMemoryTipsOutput> {
   return generateMemoryTipsFlow(input);
 }
@@ -68,7 +76,17 @@ const generateMemoryTipsFlow = ai.defineFlow<
   inputSchema: GenerateMemoryTipsInputSchema,
   outputSchema: GenerateMemoryTipsOutputSchema,
 },
-async input => {
-  const {output} = await prompt(input);
-  return output!;
+async (input: GenerateMemoryTipsInput) => {
+  try {
+    const {output} = await prompt(input);
+    if (output && output.memoryTips && output.memoryTips.length > 0) {
+        return output;
+    }
+    console.warn("AI output for generateMemoryTipsFlow was incomplete or empty, returning default tips.");
+    return defaultMemoryTips;
+  } catch (error) {
+    console.error("Error in generateMemoryTipsFlow calling prompt:", error);
+    // Fallback to default suggestions if AI fails or throws an error
+    return defaultMemoryTips;
+  }
 });
