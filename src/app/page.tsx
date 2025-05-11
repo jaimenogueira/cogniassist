@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -15,6 +16,7 @@ import { AddTaskDialog } from '@/components/app/add-task-dialog';
 import { MemoryTipsCard } from '@/components/app/memory-tips-card';
 import { TaskList } from '@/components/app/task-list'; // Assuming TaskList component exists
 import { ReminderList } from '@/components/app/reminder-list'; // Assuming ReminderList component exists
+import { MiniCalendarView } from '@/components/app/mini-calendar-view'; // Import the new component
 
 // Mock data - replace with actual data fetching later
 const initialTasks = [
@@ -124,17 +126,10 @@ export default function Home() {
 
           <MemoryTipsCard />
 
-          {/* Placeholder for Mini Weekly View */}
-          <Card className="shadow-sm hover:shadow-md transition-shadow hidden md:block">
-             <CardHeader>
-               <CardTitle className="flex items-center"><CalendarDays className="mr-2 h-5 w-5 text-primary" /> Mini Week View</CardTitle>
-             </CardHeader>
-             <CardContent>
-                <p className="text-muted-foreground text-sm">Mini calendar or week overview coming soon!</p>
-                {/* Add a simple calendar component or weekly summary here */}
-             </CardContent>
-           </Card>
-
+          {/* Mini Weekly View */}
+          <div className="hidden md:block"> {/* Keep hidden on small screens if too wide */}
+            <MiniCalendarView />
+          </div>
         </div>
       </div>
 

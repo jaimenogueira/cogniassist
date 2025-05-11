@@ -3,21 +3,28 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Lightbulb } from 'lucide-react';
+import { Lightbulb, Scissors, Brain, Repeat, Video } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { LucideIcon } from 'lucide-react';
 // import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 // import { Terminal } from "lucide-react"
 // import { generateMemoryTips } from '@/ai/flows/generate-memory-tips'; // Import the AI flow
 
-const predefinedTips = [
-  "Break the routine into short sections.",
-  "Associate movements with key words or mental images.",
-  "Repeat the main steps out loud.",
-  "Practice frequently in front of a mirror or by recording videos."
+interface MemoryTip {
+  id: string;
+  text: string;
+  icon: LucideIcon;
+}
+
+const predefinedTips: MemoryTip[] = [
+  { id: 'tip1', text: "Break the routine into short sections.", icon: Scissors },
+  { id: 'tip2', text: "Associate movements with key words or mental images.", icon: Brain },
+  { id: 'tip3', text: "Repeat the main steps out loud.", icon: Repeat },
+  { id: 'tip4', text: "Practice frequently in front of a mirror or by recording videos.", icon: Video }
 ];
 
 export function MemoryTipsCard() {
-  const [tips, setTips] = useState<string[]>([]);
+  const [tips, setTips] = useState<MemoryTip[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   // const [error, setError] = useState<string | null>(null);
 
@@ -41,19 +48,9 @@ export function MemoryTipsCard() {
     //     };
     //     const result = await generateMemoryTips(input);
     //     if (result?.memoryTips) {
-    //       if (Array.isArray(result.memoryTips)) {
-    //          setTips(result.memoryTips);
-    //       } else if (typeof result.memoryTips === 'string'){
-    //          const parsedTips = (result.memoryTips as string)
-    //             .split('\n')
-    //             .map(tip => tip.replace(/^\d+\.\s*/, '').trim()) 
-    //             .filter(tip => tip.length > 0);
-    //          setTips(parsedTips);
-    //       } else {
-    //          setTips(["Could not parse tips from AI response."]);
-    //       }
+    //       // ... parsing logic ...
     //     } else {
-    //          setTips(['No tips available at the moment.']);
+    //          setTips([{id: 'empty', text: 'No tips available at the moment.', icon: Lightbulb}]);
     //     }
     //   } catch (err) {
     //     console.error('Error fetching memory tips:', err);
@@ -76,11 +73,13 @@ export function MemoryTipsCard() {
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-4/5" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
+          <div className="space-y-3">
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="flex items-center space-x-3">
+                <Skeleton className="h-6 w-6 rounded-full" />
+                <Skeleton className="h-4 flex-1" />
+              </div>
+            ))}
           </div>
         ) 
         // : error ? (
@@ -93,16 +92,20 @@ export function MemoryTipsCard() {
         //    </Alert>
         // ) 
         : (
-          <ul className="space-y-2 list-disc list-inside text-sm text-foreground">
+          <div className="space-y-3">
             {tips.length > 0 ? (
-                tips.map((tip, index) => <li key={index}>{tip}</li>)
+                tips.map((tip) => (
+                  <div key={tip.id} className="flex items-start space-x-3 p-3 border border-border/50 rounded-lg bg-background hover:bg-muted/30 transition-colors">
+                    <tip.icon className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                    <p className="text-sm text-foreground flex-1">{tip.text}</p>
+                  </div>
+                ))
              ) : (
-                <li>No memory tips available right now.</li>
+                <p className="text-muted-foreground text-center py-2">No memory tips available right now.</p>
              )}
-          </ul>
+          </div>
         )}
       </CardContent>
     </Card>
   );
 }
-
