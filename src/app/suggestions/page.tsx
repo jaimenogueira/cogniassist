@@ -33,7 +33,6 @@ const productivityTips = [
     icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 20M4 20h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4H4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4Z"/><path d="M4 12h8"/><path d="M12 12v8"/></svg>, // Stretching icon
     bgColor: 'bg-green-100 dark:bg-green-900/30',
     iconColor: 'text-green-500 dark:text-green-400',
-
   },
   {
     id: 'hydrate',
@@ -74,7 +73,7 @@ export default function SuggestionsPage() {
   const [userReminders, setUserReminders] = useState<GenerateUserRemindersOutput | null>(null);
   
   const [isLoadingTimes, setIsLoadingTimes] = useState(true);
-  const [isLoadingBreaks, setIsLoadingBreaks] = useState(true);
+  const [isLoadingBreaks, setIsLoadingBreaks] = useState(true); // For AI break recommendations
   const [isLoadingReminders, setIsLoadingReminders] = useState(true);
 
   const [errorTimes, setErrorTimes] = useState<string | null>(null);
@@ -110,7 +109,6 @@ export default function SuggestionsPage() {
     } catch (err) {
       console.error('Error fetching time suggestions:', err);
       setErrorTimes('Failed to load time suggestions. Using default suggestions.');
-      // Provide default suggestions on error
       setTimeSuggestions({
         timeBlocks: [
           { title: 'Morning Focus', timeRange: '8 AM – 11 AM', description: 'Ideal for deep work and tasks requiring high concentration.' },
@@ -136,7 +134,7 @@ export default function SuggestionsPage() {
       setBreakRecommendations(result);
     } catch (err) {
       console.error('Error fetching break recommendations:', err);
-      setErrorBreaks('Failed to load break recommendations.');
+      setErrorBreaks('Failed to load AI break recommendations.');
     } finally {
       setIsLoadingBreaks(false);
     }
@@ -150,7 +148,7 @@ export default function SuggestionsPage() {
         userHabits: mockUserHabits,
         currentTime: new Date().toISOString(),
         upcomingCalendarEvents: mockCalendarEvents,
-        recentTaskActivity: mockTaskHistory, // Can be the same as break input or more specific
+        recentTaskActivity: mockTaskHistory,
         preferredTone: reminderTone,
       };
       const result = await generateUserReminders(input);
@@ -162,6 +160,13 @@ export default function SuggestionsPage() {
       setIsLoadingReminders(false);
     }
   }, [reminderTone]);
+
+  const handleRefreshStaticTip = useCallback(() => {
+    if (productivityTips.length > 0) {
+      const randomIndex = Math.floor(Math.random() * productivityTips.length);
+      setCurrentTipIndex(randomIndex);
+    }
+  }, []);
 
   useEffect(() => {
     fetchTimeSuggestions();
@@ -175,25 +180,31 @@ export default function SuggestionsPage() {
     fetchUserReminders();
   }, [fetchUserReminders]);
 
+  useEffect(() => {
+    handleRefreshStaticTip(); // Set initial random tip
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
+
+  // Auto-rotation for productivity tips
+  useEffect(() => {
+    if (productivityTips.length === 0 || isLoadingBreaks) return; // Don't rotate if no tips or AI breaks are loading
+
+    const intervalId = setInterval(() => {
+      setCurrentTipIndex(prevIndex => (prevIndex + 1) % productivityTips.length);
+    }, 7000); // Rotate every 7 seconds
+
+    return () => clearInterval(intervalId);
+  }, [isLoadingBreaks]);
+
+
   const handleRefreshAll = () => {
     fetchTimeSuggestions();
     fetchBreakRecommendations();
     fetchUserReminders();
-  };
-
-  const handleRefreshBreaks = () => {
-    const randomIndex = Math.floor(Math.random() * productivityTips.length);
-    setCurrentTipIndex(randomIndex);
-    // Optionally, could also re-fetch AI break recommendations if they were dynamic
-    // fetchBreakRecommendations(); 
+    handleRefreshStaticTip();
   };
   
-  useEffect(() => {
-    handleRefreshBreaks(); // Set initial random tip
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run once on mount
-
-  const currentProdTip = productivityTips[currentTipIndex];
+  const currentProdTip = productivityTips.length > 0 ? productivityTips[currentTipIndex] : null;
 
 
   return (
@@ -274,52 +285,56 @@ export default function SuggestionsPage() {
           </CardContent>
         </Card>
 
-        {/* Break & Productivity Tip Card - Using static rotating tip */}
+        {/* Break & Productivity Tip Card */}
         <Card className="shadow-sm hover:shadow-md transition-shadow flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between">
-                <div className="space-y-0.5">
-                    <CardTitle className="flex items-center">
+            <CardHeader className="flex flex-row items-start justify-between pb-2">
+                <div className="flex-1">
+                    <CardTitle className="flex items-center text-lg">
                         <Coffee className="mr-2 h-5 w-5 text-amber-600" /> Productivity Tip
                     </CardTitle>
-                    <CardDescription>Optimize your workflow with this tip.</CardDescription>
+                    <CardDescription className="text-xs">A new tip to optimize your workflow.</CardDescription>
                 </div>
-                <Button onClick={handleRefreshBreaks} variant="ghost" size="sm" disabled={isLoadingBreaks}>
-                    <RefreshCw className={cn("h-4 w-4", isLoadingBreaks && "animate-spin")} />
-                    <span className="sr-only">Refresh Tip</span>
+                <Button onClick={handleRefreshStaticTip} variant="ghost" size="icon" className="h-8 w-8 shrink-0" title="Next Tip">
+                    <RefreshCw className={"h-4 w-4"} />
+                    <span className="sr-only">Next Tip</span>
                 </Button>
             </CardHeader>
-            <CardContent className={`flex-grow p-6 rounded-b-md ${currentProdTip.bgColor}`}>
-                {isLoadingBreaks ? (
-                    <div className="space-y-2">
-                        <Skeleton className="h-5 w-3/4" />
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-5/6" />
+            <CardContent className={cn("flex-grow p-4 pt-2 rounded-b-md", currentProdTip?.bgColor, !currentProdTip && "flex items-center justify-center")}>
+                {currentProdTip ? (
+                    <div className="flex flex-col items-center text-center h-full justify-center space-y-2">
+                        <h3 className="text-lg font-semibold text-foreground">{currentProdTip.title}</h3>
+                        <currentProdTip.icon className={cn("h-10 w-10 my-1", currentProdTip.iconColor)} data-ai-hint="tip illustration" />
+                        <p className="text-xs text-muted-foreground px-2 leading-relaxed">{currentProdTip.tip}</p>
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center text-center h-full justify-center">
-                         <currentProdTip.icon className={cn("h-12 w-12 mb-3", currentProdTip.iconColor)} />
-                        <h3 className="text-lg font-semibold mb-1 text-foreground">{currentProdTip.title}</h3>
-                        <p className="text-sm text-muted-foreground">{currentProdTip.tip}</p>
+                    <div className="flex flex-col items-center text-center">
+                        <Lightbulb className="h-10 w-10 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground">No tips available right now.</p>
                     </div>
                 )}
             </CardContent>
              {/* Displaying AI Break Recommendation as a footer if available */}
-            {breakRecommendations && !isLoadingBreaks && !errorBreaks && (
-                 <CardFooter className="pt-4 border-t text-xs">
-                    <div className="space-y-1">
-                        <p><span className="font-semibold">AI Suggests:</span> {breakRecommendations.breakRecommendation}</p>
-                        <p><span className="font-semibold">Technique:</span> {breakRecommendations.productivityTechnique}</p>
-                        <p className="italic text-muted-foreground/80">Reasoning: {breakRecommendations.reasoning}</p>
-                    </div>
-                 </CardFooter>
-            )}
-             {errorBreaks && (
-                <CardFooter className="pt-4 border-t">
-                     <Alert variant="destructive" className="w-full text-xs">
-                        <Terminal className="h-3 w-3" />
-                        <AlertTitle className="text-xs">Error</AlertTitle>
-                        <AlertDescription className="text-xs">{errorBreaks}</AlertDescription>
-                    </Alert>
+            {(isLoadingBreaks || breakRecommendations || errorBreaks) && (
+                <CardFooter className="pt-3 mt-auto border-t text-xs">
+                    {isLoadingBreaks ? (
+                        <div className="space-y-1 w-full">
+                            <Skeleton className="h-3 w-1/3" />
+                            <Skeleton className="h-3 w-full" />
+                            <Skeleton className="h-3 w-2/3" />
+                        </div>
+                    ): errorBreaks ? (
+                        <Alert variant="destructive" className="w-full text-xs p-2">
+                            <Terminal className="h-3 w-3" />
+                            <AlertTitle className="text-xs font-medium">AI Suggestion Error</AlertTitle>
+                            <AlertDescription className="text-xs">{errorBreaks}</AlertDescription>
+                        </Alert>
+                    ) : breakRecommendations && (
+                        <div className="space-y-1">
+                            <p><span className="font-semibold">AI Suggests:</span> {breakRecommendations.breakRecommendation}</p>
+                            <p><span className="font-semibold">Technique:</span> {breakRecommendations.productivityTechnique}</p>
+                            <p className="italic text-muted-foreground/80">Reasoning: {breakRecommendations.reasoning}</p>
+                        </div>
+                    )}
                 </CardFooter>
             )}
         </Card>
