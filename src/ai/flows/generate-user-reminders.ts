@@ -57,7 +57,7 @@ Consider the following user information:
 - Current Time: {{{currentTime}}}
 - Upcoming Calendar Events: {{{upcomingCalendarEvents}}}
 - Recent Task Activity (including overdue/missed and habit tracking): {{{recentTaskActivity}}}
-{{#if mood}}- User's Current Mood: {{{mood}}}{{/if}}
+{{#if mood}}- User's Current Mood: {{{mood}}}{{#endif}}
 - Preferred Reminder Tone: {{{preferredTone}}}
 
 Based on this information, generate 1 to 3 concise, helpful, and actionable reminders.
@@ -98,9 +98,10 @@ const generateUserRemindersFlow = ai.defineFlow(
   async (input: GenerateUserRemindersInput) => {
     try {
       const {output} = await prompt(input);
-      if (output && output.reminders && output.reminders.length > 0) {
+      if (output && output.reminders && output.reminders.length > 0 && output.reasoning) {
         return output;
       }
+      console.warn("AI output for generateUserRemindersFlow was incomplete or empty, returning default message.", {aiOutput: output});
       // Fallback if AI output is not as expected or no reminders generated
       return {
         reminders: ["Could not generate specific reminders at this time. Please check your general task list."],

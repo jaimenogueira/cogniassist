@@ -378,7 +378,7 @@ export default function SuggestionsPage() {
                 <Skeleton className="h-4 w-5/6" />
                 <Skeleton className="h-4 w-3/4" />
               </div>
-            ) : errorReminders && (!userReminders || userReminders.reminders.length === 0 || userReminders.reminders[0].includes("Could not generate")) ? (
+            ) : errorReminders && (!userReminders || userReminders.reminders.length === 0 || (userReminders.reminders[0] && userReminders.reminders[0].includes("Could not generate"))) ? (
               <Alert variant="destructive">
                 <Terminal className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
