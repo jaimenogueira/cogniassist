@@ -73,7 +73,7 @@ export default function SuggestionsPage() {
   const [userReminders, setUserReminders] = useState<GenerateUserRemindersOutput | null>(null);
   
   const [isLoadingTimes, setIsLoadingTimes] = useState(true);
-  const [isLoadingBreaks, setIsLoadingBreaks] = useState(true); // For AI break recommendations
+  const [isLoadingBreaks, setIsLoadingBreaks] = useState(true); 
   const [isLoadingReminders, setIsLoadingReminders] = useState(true);
 
   const [errorTimes, setErrorTimes] = useState<string | null>(null);
@@ -88,10 +88,11 @@ export default function SuggestionsPage() {
   // Mock data for AI input - replace with actual user data later
   const mockFocusHistory = "High focus between 9 AM - 11 AM. Low focus around 2 PM. Usually finishes tasks quickly in the morning.";
   const mockPastCompletion = "Completed 'Project Report' at 10:30 AM yesterday. Finished 'Client Call Prep' at 9:15 AM today.";
-  const mockTaskHistory = "Completed: Project Report (2h), Client Call Prep (1h). In Progress: Market Research (Est. 3h). Missed: Follow up email (due yesterday).";
+  const mockTaskHistory = "Completed: Project Report (2h), Client Call Prep (1h). In Progress: Market Research (Est. 3h). Missed: Follow up email (due yesterday). Habit: Language Practice (last done 3 days ago).";
   const mockFocusPatterns = "Peak focus 9-11 AM. Dip around 2 PM. Often distracted by notifications in the afternoon.";
   const mockUserHabits = "User often works late, checks emails first thing. Occasionally forgets to take breaks during long work sessions. Prefers visual reminders.";
   const mockCalendarEvents = "Team Meeting at 2 PM today. Dentist appointment tomorrow at 10 AM.";
+  // const mockMood = "stressed"; // Optional: could be dynamic
 
 
   const fetchTimeSuggestions = useCallback(async () => {
@@ -109,6 +110,7 @@ export default function SuggestionsPage() {
     } catch (err) {
       console.error('Error fetching time suggestions:', err);
       setErrorTimes('Failed to load time suggestions. Using default suggestions.');
+      // Fallback to default time suggestions on error
       setTimeSuggestions({
         timeBlocks: [
           { title: 'Morning Focus', timeRange: '8 AM – 11 AM', description: 'Ideal for deep work and tasks requiring high concentration.' },
@@ -150,12 +152,17 @@ export default function SuggestionsPage() {
         upcomingCalendarEvents: mockCalendarEvents,
         recentTaskActivity: mockTaskHistory,
         preferredTone: reminderTone,
+        // mood: mockMood, // Pass mood if available
       };
       const result = await generateUserReminders(input);
       setUserReminders(result);
     } catch (err) {
       console.error('Error fetching user reminders:', err);
       setErrorReminders('Failed to load smart reminders.');
+      setUserReminders({
+        reminders: ["Could not generate smart reminders at this time. Check back later!"],
+        reasoning: "An error occurred while attempting to fetch smart reminders.",
+      });
     } finally {
       setIsLoadingReminders(false);
     }
@@ -174,30 +181,28 @@ export default function SuggestionsPage() {
 
   useEffect(() => {
     fetchBreakRecommendations();
-  }, [fetchBreakRecommendations]);
+     // Fetch initial static tip when break recommendations are (or would be) fetched
+    handleRefreshStaticTip();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchBreakRecommendations]); 
   
   useEffect(() => {
     fetchUserReminders();
   }, [fetchUserReminders]);
 
-  useEffect(() => {
-    handleRefreshStaticTip(); // Set initial random tip
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
 
   // Auto-rotation for productivity tips
   useEffect(() => {
-    if (productivityTips.length === 0 || isLoadingBreaks) return; // Don't rotate if no tips or AI breaks are loading
+    if (productivityTips.length === 0 || isLoadingBreaks) return;
 
     const intervalId = setInterval(() => {
       if (productivityTips.length > 0) {
-        const randomIndex = Math.floor(Math.random() * productivityTips.length);
-        setCurrentTipIndex(randomIndex);
+        setCurrentTipIndex(prevIndex => (prevIndex + 1) % productivityTips.length);
       }
     }, 7000); // Rotate every 7 seconds
 
     return () => clearInterval(intervalId);
-  }, [isLoadingBreaks]); // isLoadingBreaks dependency is to pause rotation while AI recommendation is loading.
+  }, [isLoadingBreaks]); 
 
 
   const handleRefreshAll = () => {
@@ -258,7 +263,7 @@ export default function SuggestionsPage() {
                 ))}
                  <Skeleton className="h-4 w-5/6 mt-2" />
               </div>
-            ) : errorTimes ? (
+            ) : errorTimes && (!timeSuggestions || timeSuggestions.timeBlocks.length === 0) ? ( // Show error only if no fallback data
               <Alert variant="destructive">
                 <Terminal className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
@@ -297,13 +302,13 @@ export default function SuggestionsPage() {
                     </CardTitle>
                     <CardDescription className="text-xs">A new tip to optimize your workflow.</CardDescription>
                 </div>
-                <Button onClick={handleRefreshStaticTip} variant="ghost" size="icon" className="h-8 w-8 shrink-0" title="Next Tip" disabled={isLoadingBreaks}>
-                    <RefreshCw className={cn("h-4 w-4", isLoadingBreaks && "animate-spin")} />
+                <Button onClick={handleRefreshStaticTip} variant="ghost" size="icon" className="h-8 w-8 shrink-0" title="Next Tip" disabled={isLoadingBreaks && !currentProdTip}>
+                    <RefreshCw className={cn("h-4 w-4", isLoadingBreaks && !currentProdTip && "animate-spin")} />
                     <span className="sr-only">Next Tip</span>
                 </Button>
             </CardHeader>
             <CardContent className={cn("flex-grow p-4 pt-2 rounded-b-md", currentProdTip?.bgColor, !currentProdTip && "flex items-center justify-center")}>
-                {isLoadingBreaks && !currentProdTip ? ( // Show skeleton only if currentProdTip is also null (initial load)
+                 {isLoadingBreaks && !currentProdTip ? ( 
                     <div className="flex flex-col items-center text-center h-full justify-center space-y-2 w-full">
                         <Skeleton className="h-10 w-10 rounded-full" />
                         <Skeleton className="h-5 w-3/4" />
@@ -316,13 +321,30 @@ export default function SuggestionsPage() {
                         <currentProdTip.icon className={cn("h-10 w-10 my-1", currentProdTip.iconColor)} data-ai-hint="tip illustration" />
                         <p className="text-xs text-muted-foreground px-2 leading-relaxed">{currentProdTip.tip}</p>
                     </div>
+                 ) : errorBreaks ? (
+                    <Alert variant="destructive" className="w-full">
+                        <Terminal className="h-4 w-4" />
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>{errorBreaks}</AlertDescription>
+                     </Alert>
                 ) : (
                     <div className="flex flex-col items-center text-center">
                         <Lightbulb className="h-10 w-10 text-muted-foreground mb-2" />
-                        <p className="text-sm text-muted-foreground">No tips available right now.</p>
+                        <p className="text-sm text-muted-foreground">No productivity tips available right now.</p>
                     </div>
                 )}
             </CardContent>
+             {/* AI Break Recommendation (Optional - if API supports it and not part of static tips) */}
+             {breakRecommendations && !isLoadingBreaks && !errorBreaks && (
+              <CardFooter className="pt-3 border-t border-border/50">
+                <div className="text-xs space-y-1">
+                    <p className="font-semibold text-foreground">AI Suggested Break:</p>
+                    <p className="text-muted-foreground"><span className="font-medium text-foreground/80">Recommendation:</span> {breakRecommendations.breakRecommendation}</p>
+                    <p className="text-muted-foreground"><span className="font-medium text-foreground/80">Technique:</span> {breakRecommendations.productivityTechnique}</p>
+                    <p className="text-muted-foreground italic"><span className="font-medium text-foreground/80">Reasoning:</span> {breakRecommendations.reasoning}</p>
+                </div>
+              </CardFooter>
+            )}
         </Card>
       </div>
 
@@ -356,7 +378,7 @@ export default function SuggestionsPage() {
                 <Skeleton className="h-4 w-5/6" />
                 <Skeleton className="h-4 w-3/4" />
               </div>
-            ) : errorReminders ? (
+            ) : errorReminders && (!userReminders || userReminders.reminders.length === 0 || userReminders.reminders[0].includes("Could not generate")) ? (
               <Alert variant="destructive">
                 <Terminal className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
@@ -380,6 +402,12 @@ export default function SuggestionsPage() {
                  </p>
              )}
           </CardContent>
+          {/* Feedback system placeholder - to be implemented if needed */}
+          {/* <CardFooter className="pt-3 border-t">
+            <p className="text-xs text-muted-foreground">Was this reminder helpful?</p>
+            <Button variant="ghost" size="sm" className="ml-auto text-xs">Yes</Button>
+            <Button variant="ghost" size="sm" className="text-xs">No</Button>
+          </CardFooter> */}
         </Card>
     </div>
   );

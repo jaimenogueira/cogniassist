@@ -28,7 +28,7 @@ const GenerateUserRemindersInputSchema = z.object({
     .enum(['motivational', 'neutral', 'gentle'])
     .default('neutral')
     .describe('The preferred tone for the reminders.'),
-  // mood: z.string().optional().describe("The user's current mood, if available (e.g., 'stressed', 'focused', 'tired'). This can help tailor the reminder's sensitivity.")
+  mood: z.string().optional().describe("The user's current mood, if available (e.g., 'stressed', 'focused', 'tired'). This can help tailor the reminder's sensitivity.")
 });
 export type GenerateUserRemindersInput = z.infer<typeof GenerateUserRemindersInputSchema>;
 
@@ -57,6 +57,7 @@ Consider the following user information:
 - Current Time: {{{currentTime}}}
 - Upcoming Calendar Events: {{{upcomingCalendarEvents}}}
 - Recent Task Activity (including overdue/missed and habit tracking): {{{recentTaskActivity}}}
+{{#if mood}}- User's Current Mood: {{{mood}}}{{/if}}
 - Preferred Reminder Tone: {{{preferredTone}}}
 
 Based on this information, generate 1 to 3 concise, helpful, and actionable reminders.
@@ -70,6 +71,7 @@ The reminders should be:
     -   If 'motivational', make them encouraging and empowering. (e.g., "Go for it! You’ve got this 💪 Tackle that important project now!")
     -   If 'neutral', keep them direct and informative. (e.g., "Your peak focus time is typically at night. Consider working on [Task X] now.")
     -   If 'gentle', make them soft and understanding. (e.g., "Remember, you can continue [Task Y] when you’re ready. Perhaps a small step now?")
+{{#if mood}}4. **Mood-Sensitive**: If mood is provided ({{{mood}}}), try to make the reminder sensitive to it. For example, if 'stressed', a gentle or very light motivational reminder might be better. If 'focused', a direct reminder might be fine.{{/if}}
 
 Also provide a brief 'reasoning' string (1-2 sentences) explaining why these specific reminders were generated in relation to the provided user data and how they aim to help.
 
