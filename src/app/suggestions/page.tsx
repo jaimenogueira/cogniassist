@@ -22,39 +22,39 @@ const productivityTips = [
     id: 'pomodoro',
     title: 'Pomodoro Technique',
     tip: 'Work for 25 minutes, then take a 5-minute break. Repeat 4 times, then rest longer.',
-    icon: Clock,
+    icon: Clock, // Represents ⏱️
     bgColor: 'bg-red-100 dark:bg-red-900/30',
     iconColor: 'text-red-500 dark:text-red-400',
   },
   {
     id: 'stretch',
-    title: 'Quick Stretch',
+    title: 'Stretch Break', // Updated title
     tip: 'Stand up and do a quick stretch to refresh your body between long tasks.',
-    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 20M4 20h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4H4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4Z"/><path d="M4 12h8"/><path d="M12 12v8"/></svg>, // Stretching icon
+    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 20M4 20h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4H4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4Z"/><path d="M4 12h8"/><path d="M12 12v8"/></svg>, // Represents 🤸‍♂️
     bgColor: 'bg-green-100 dark:bg-green-900/30',
     iconColor: 'text-green-500 dark:text-green-400',
   },
-  {
-    id: 'hydrate',
-    title: 'Stay Hydrated',
-    tip: 'Drink a glass of water every 1-2 hours to stay mentally sharp and focused.',
-    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s5-4 5-10V6a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3v6c0 6 5 10 5 10z"/><path d="M8.5 9a2.5 2.5 0 1 1 5 0"/></svg>, // Water bottle icon
-    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
-    iconColor: 'text-blue-500 dark:text-blue-400',
-  },
-  {
+   {
     id: 'changeEnv',
     title: 'Change Environment',
-    tip: 'If feeling stuck, try working from a different location for a fresh perspective.',
-    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 12h20"/><path d="m5 12-1-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2l-1 7"/><path d="M12 12v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>, // Environment icon
+    tip: 'Try working from a different location when you feel stuck or unfocused.', // Tip updated
+    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 12h20"/><path d="m5 12-1-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2l-1 7"/><path d="M12 12v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>, // Represents 🌿
     bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
     iconColor: 'text-yellow-500 dark:text-yellow-400',
   },
   {
+    id: 'hydrate',
+    title: 'Hydration Reminder', // Updated title
+    tip: 'Drink a glass of water every 2 hours to stay mentally sharp.', // Tip updated
+    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s5-4 5-10V6a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3v6c0 6 5 10 5 10z"/><path d="M8.5 9a2.5 2.5 0 1 1 5 0"/></svg>, // Represents 💧
+    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+    iconColor: 'text-blue-500 dark:text-blue-400',
+  },
+  {
     id: 'restProductive',
-    title: 'Rest is Productive',
-    tip: 'Taking breaks helps your brain process information and boosts overall productivity.',
-    icon: Brain,
+    title: 'Rest Is Productive',
+    tip: 'Taking breaks helps your brain process and retain information better.', // Tip updated
+    icon: Brain, // Represents 🧠
     bgColor: 'bg-purple-100 dark:bg-purple-900/30',
     iconColor: 'text-purple-500 dark:text-purple-400',
   },
@@ -190,11 +190,14 @@ export default function SuggestionsPage() {
     if (productivityTips.length === 0 || isLoadingBreaks) return; // Don't rotate if no tips or AI breaks are loading
 
     const intervalId = setInterval(() => {
-      setCurrentTipIndex(prevIndex => (prevIndex + 1) % productivityTips.length);
+      if (productivityTips.length > 0) {
+        const randomIndex = Math.floor(Math.random() * productivityTips.length);
+        setCurrentTipIndex(randomIndex);
+      }
     }, 7000); // Rotate every 7 seconds
 
     return () => clearInterval(intervalId);
-  }, [isLoadingBreaks]);
+  }, [isLoadingBreaks]); // isLoadingBreaks dependency is to pause rotation while AI recommendation is loading.
 
 
   const handleRefreshAll = () => {
@@ -285,7 +288,7 @@ export default function SuggestionsPage() {
           </CardContent>
         </Card>
 
-        {/* Break & Productivity Tip Card */}
+        {/* Break & Productivity Tip Card (Panel) */}
         <Card className="shadow-sm hover:shadow-md transition-shadow flex flex-col">
             <CardHeader className="flex flex-row items-start justify-between pb-2">
                 <div className="flex-1">
@@ -294,13 +297,20 @@ export default function SuggestionsPage() {
                     </CardTitle>
                     <CardDescription className="text-xs">A new tip to optimize your workflow.</CardDescription>
                 </div>
-                <Button onClick={handleRefreshStaticTip} variant="ghost" size="icon" className="h-8 w-8 shrink-0" title="Next Tip">
-                    <RefreshCw className={"h-4 w-4"} />
+                <Button onClick={handleRefreshStaticTip} variant="ghost" size="icon" className="h-8 w-8 shrink-0" title="Next Tip" disabled={isLoadingBreaks}>
+                    <RefreshCw className={cn("h-4 w-4", isLoadingBreaks && "animate-spin")} />
                     <span className="sr-only">Next Tip</span>
                 </Button>
             </CardHeader>
             <CardContent className={cn("flex-grow p-4 pt-2 rounded-b-md", currentProdTip?.bgColor, !currentProdTip && "flex items-center justify-center")}>
-                {currentProdTip ? (
+                {isLoadingBreaks && !currentProdTip ? ( // Show skeleton only if currentProdTip is also null (initial load)
+                    <div className="flex flex-col items-center text-center h-full justify-center space-y-2 w-full">
+                        <Skeleton className="h-10 w-10 rounded-full" />
+                        <Skeleton className="h-5 w-3/4" />
+                        <Skeleton className="h-3 w-full" />
+                        <Skeleton className="h-3 w-5/6" />
+                    </div>
+                ) : currentProdTip ? (
                     <div className="flex flex-col items-center text-center h-full justify-center space-y-2">
                         <h3 className="text-lg font-semibold text-foreground">{currentProdTip.title}</h3>
                         <currentProdTip.icon className={cn("h-10 w-10 my-1", currentProdTip.iconColor)} data-ai-hint="tip illustration" />
