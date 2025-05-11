@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
-import { Eye, Bell, Palette, Contrast, Volume2, Accessibility, Users, Tablet, ListChecks, Navigation } from 'lucide-react';
+import { Eye, Bell, Palette, Contrast, Volume2, Accessibility, Users, Tablet, ListChecks, Navigation, SlidersHorizontal } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useToast } from "@/hooks/use-toast";
 
@@ -104,7 +104,7 @@ export default function SettingsPage() {
     <div className="space-y-6 max-w-3xl mx-auto">
       <header>
         <h1 className="text-3xl font-bold text-foreground flex items-center">
-           <Accessibility className="mr-2 h-8 w-8 text-primary" /> Settings & Profile
+           <SlidersHorizontal className="mr-2 h-8 w-8 text-primary" /> Settings & Profile
         </h1>
         <p className="text-muted-foreground">
             Personalize CogniAssist to fit your cognitive needs and preferences.
