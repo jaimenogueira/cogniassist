@@ -9,43 +9,58 @@ import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Eye, Bell, Palette, Contrast, Volume2, Accessibility } from 'lucide-react';
-import { useTheme } from 'next-themes'; // Assuming next-themes is installed for theme switching
-import { useToast } from "@/hooks/use-toast"
+import { Input } from '@/components/ui/input';
+import { Eye, Bell, Palette, Contrast, Volume2, Accessibility, Users, Tablet, ListChecks, Navigation } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useToast } from "@/hooks/use-toast";
 
+interface CognitiveAssistSettings {
+    caregiverIntegrationEnabled: boolean;
+    caregiverContact: string;
+    medicationAlertsEnabled: boolean;
+    stepByStepTasksEnabled: boolean;
+    audioFeedbackEnabled: boolean;
+    simplifiedNavigationEnabled: boolean;
+}
+
+const initialCognitiveAssistSettings: CognitiveAssistSettings = {
+    caregiverIntegrationEnabled: false,
+    caregiverContact: '',
+    medicationAlertsEnabled: false,
+    stepByStepTasksEnabled: false,
+    audioFeedbackEnabled: false,
+    simplifiedNavigationEnabled: false,
+};
 
 export default function SettingsPage() {
     const { toast } = useToast()
-    // Theme switching (requires next-themes setup in layout/provider)
     const { theme, setTheme } = useTheme ? useTheme() : { theme: 'light', setTheme: () => console.warn("next-themes not configured") };
 
-    // State for settings - Load from localStorage or backend in a real app
-    const [cognitiveMode, setCognitiveMode] = useState('standard'); // 'standard', 'senior', 'adhd'
-    const [notificationFrequency, setNotificationFrequency] = useState('medium'); // 'low', 'medium', 'high'
+    const [cognitiveMode, setCognitiveMode] = useState('standard'); // 'standard', 'senior', 'adhd', 'assist'
+    const [notificationFrequency, setNotificationFrequency] = useState('medium');
     const [notificationType, setNotificationType] = useState({ sound: true, visual: true, vibration: false });
-    const [useHighContrast, setUseHighContrast] = useState(false); // Example state
+    const [useHighContrast, setUseHighContrast] = useState(false);
+    const [cognitiveAssistSettings, setCognitiveAssistSettings] = useState<CognitiveAssistSettings>(initialCognitiveAssistSettings);
 
-    // Effect to apply high contrast class (example)
+
     useEffect(() => {
         if (useHighContrast) {
-            document.body.classList.add('high-contrast'); // Define .high-contrast styles in globals.css
+            document.body.classList.add('high-contrast');
         } else {
             document.body.classList.remove('high-contrast');
         }
-        // Cleanup on unmount
         return () => document.body.classList.remove('high-contrast');
     }, [useHighContrast]);
 
 
      const handleSaveChanges = () => {
-        // --- Persistence Logic ---
-        // In a real app, save these settings to localStorage, IndexedDB, or a backend service.
         console.log('Saving settings:', {
-        cognitiveMode,
-        notificationFrequency,
-        notificationType,
-        theme,
-        useHighContrast,
+            cognitiveMode,
+            notificationFrequency,
+            notificationType,
+            theme,
+            useHighContrast,
+            cognitiveAssistSettings: cognitiveMode === 'assist' ? cognitiveAssistSettings : undefined,
         });
 
         localStorage.setItem('userSettings', JSON.stringify({
@@ -54,8 +69,8 @@ export default function SettingsPage() {
             notificationType,
             theme,
             useHighContrast,
+            cognitiveAssistSettings: cognitiveMode === 'assist' ? cognitiveAssistSettings : initialCognitiveAssistSettings,
         }));
-
 
         toast({
           title: "Settings Saved",
@@ -63,7 +78,6 @@ export default function SettingsPage() {
         })
       };
 
-     // Effect to load settings on component mount
       useEffect(() => {
         const savedSettings = localStorage.getItem('userSettings');
         if (savedSettings) {
@@ -74,12 +88,16 @@ export default function SettingsPage() {
             setNotificationType(parsedSettings.notificationType || { sound: true, visual: true, vibration: false });
             if (useTheme && parsedSettings.theme) setTheme(parsedSettings.theme);
             setUseHighContrast(parsedSettings.useHighContrast || false);
+            if (parsedSettings.cognitiveAssistSettings) {
+                setCognitiveAssistSettings(parsedSettings.cognitiveAssistSettings);
+            } else {
+                setCognitiveAssistSettings(initialCognitiveAssistSettings);
+            }
           } catch (error) {
             console.error("Failed to parse saved settings:", error);
-            // Handle error or use defaults
           }
         }
-      }, [setTheme, useTheme]); // Add setTheme dependency if useTheme is available
+      }, [setTheme, useTheme]);
 
 
   return (
@@ -93,7 +111,6 @@ export default function SettingsPage() {
         </p>
       </header>
 
-      {/* Cognitive Profile Section */}
       <Card className="shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center"><Eye className="mr-2 h-5 w-5 text-primary" /> Cognitive Profile</CardTitle>
@@ -118,14 +135,108 @@ export default function SettingsPage() {
               <Label htmlFor="mode-adhd">ADHD Mode</Label>
             </div>
              <p className="text-sm text-muted-foreground pl-6">Visual task blocks, frequent alerts, minimized distractions.</p>
+            
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="assist" id="mode-assist" />
+              <Label htmlFor="mode-assist">Cognitive Assist Mode</Label>
+            </div>
+             <p className="text-sm text-muted-foreground pl-6">Enhanced support for memory deficits, Alzheimer’s, or brain injury. Includes step-by-step guidance, repetitive reminders, and optional caregiver integration.</p>
           </RadioGroup>
-           {/* Add specific adjustments based on mode later */}
         </CardContent>
       </Card>
 
+      {cognitiveMode === 'assist' && (
+        <>
+        <Separator />
+        <Card className="shadow-sm">
+            <CardHeader>
+                <CardTitle className="flex items-center"><Accessibility className="mr-2 h-5 w-5 text-green-500" /> Cognitive Assist Features</CardTitle>
+                <CardDescription>Customize features for enhanced cognitive support.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="step-by-step-tasks"
+                            checked={cognitiveAssistSettings.stepByStepTasksEnabled}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, stepByStepTasksEnabled: checked }))}
+                        />
+                        <Label htmlFor="step-by-step-tasks" className="flex items-center gap-2"><ListChecks className="h-4 w-4"/> Step-by-Step Task Guidance</Label>
+                    </div>
+                    <p className="text-xs text-muted-foreground pl-8">Breaks tasks into smaller, manageable steps with visual aids.</p>
+                </div>
+
+                <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="audio-feedback"
+                            checked={cognitiveAssistSettings.audioFeedbackEnabled}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, audioFeedbackEnabled: checked }))}
+                        />
+                        <Label htmlFor="audio-feedback" className="flex items-center gap-2"><Volume2 className="h-4 w-4"/> Audio Confirmation & Feedback</Label>
+                    </div>
+                     <p className="text-xs text-muted-foreground pl-8">Provides voice cues for actions and reminders.</p>
+                </div>
+                 <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="simplified-navigation"
+                            checked={cognitiveAssistSettings.simplifiedNavigationEnabled}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, simplifiedNavigationEnabled: checked }))}
+                        />
+                        <Label htmlFor="simplified-navigation" className="flex items-center gap-2"><Navigation className="h-4 w-4"/> Simplified Navigation</Label>
+                    </div>
+                     <p className="text-xs text-muted-foreground pl-8">Reduces complexity in menus and interface.</p>
+                </div>
+
+                <Separator />
+
+                 <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="caregiver-integration"
+                            checked={cognitiveAssistSettings.caregiverIntegrationEnabled}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, caregiverIntegrationEnabled: checked }))}
+                        />
+                        <Label htmlFor="caregiver-integration" className="flex items-center gap-2"><Users className="h-4 w-4"/> Caregiver Integration</Label>
+                    </div>
+                     <p className="text-xs text-muted-foreground pl-8">Allows a designated caregiver to receive notifications and assist with management.</p>
+                    {cognitiveAssistSettings.caregiverIntegrationEnabled && (
+                         <div className="pl-8 pt-2">
+                            <Label htmlFor="caregiver-contact">Caregiver Contact (Email or Phone)</Label>
+                            <Input
+                                id="caregiver-contact"
+                                type="text"
+                                placeholder="Enter caregiver's email or phone"
+                                value={cognitiveAssistSettings.caregiverContact}
+                                onChange={(e) => setCognitiveAssistSettings(prev => ({...prev, caregiverContact: e.target.value}))}
+                                className="mt-1"
+                            />
+                         </div>
+                    )}
+                </div>
+
+                <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="medication-alerts"
+                            checked={cognitiveAssistSettings.medicationAlertsEnabled}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, medicationAlertsEnabled: checked }))}
+                        />
+                        <Label htmlFor="medication-alerts" className="flex items-center gap-2"><Tablet className="h-4 w-4"/> Medication Alert System</Label>
+                    </div>
+                    <p className="text-xs text-muted-foreground pl-8">Set up and receive persistent medication reminders.</p>
+                    {/* Placeholder for medication setup UI if enabled */}
+                </div>
+                 <p className="text-xs text-muted-foreground pt-2">Note: Repetitive reminders are automatically enhanced when Cognitive Assist Mode is active, based on your Notification Settings.</p>
+            </CardContent>
+        </Card>
+        </>
+      )}
+
+
        <Separator />
 
-      {/* Notification Settings Section */}
       <Card className="shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center"><Bell className="mr-2 h-5 w-5 text-accent" /> Notification Settings</CardTitle>
@@ -142,8 +253,10 @@ export default function SettingsPage() {
                 <SelectItem value="low">Low (Minimal)</SelectItem>
                 <SelectItem value="medium">Medium (Balanced)</SelectItem>
                 <SelectItem value="high">High (Frequent)</SelectItem>
+                 {cognitiveMode === 'assist' && <SelectItem value="persistent">Persistent (Cognitive Assist)</SelectItem>}
               </SelectContent>
             </Select>
+            {cognitiveMode === 'assist' && <p className="text-xs text-muted-foreground mt-1">Persistent reminders require user interaction to dismiss.</p>}
           </div>
 
           <div>
@@ -180,14 +293,13 @@ export default function SettingsPage() {
 
        <Separator />
 
-       {/* Appearance Settings Section */}
        <Card className="shadow-sm">
          <CardHeader>
            <CardTitle className="flex items-center"><Palette className="mr-2 h-5 w-5 text-purple-500" /> Appearance</CardTitle>
            <CardDescription>Customize the look and feel of the app.</CardDescription>
          </CardHeader>
          <CardContent className="space-y-4">
-            {useTheme && ( // Conditionally render if next-themes is setup
+            {useTheme && (
                  <div>
                     <Label className="block mb-2">Theme</Label>
                     <RadioGroup value={theme} onValueChange={setTheme} className="flex space-x-4">
@@ -216,59 +328,12 @@ export default function SettingsPage() {
                   <Label htmlFor="high-contrast" className="flex items-center gap-2"><Contrast className="h-4 w-4"/> High Contrast Mode</Label>
             </div>
             <p className="text-sm text-muted-foreground pl-8">Increases text and element contrast for better visibility.</p>
-
-
          </CardContent>
        </Card>
 
         <div className="flex justify-end pt-4">
             <Button onClick={handleSaveChanges} size="lg">Save Changes</Button>
         </div>
-
     </div>
   );
 }
-
-// Add high-contrast styles to src/app/globals.css if needed:
-/*
-.high-contrast {
-  --foreground: 0 0% 0%;
-  --background: 0 0% 100%;
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 0%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 0%;
-  --primary: 240 100% 50%; // Stronger blue
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 90%; // Lighter gray
-  --secondary-foreground: 0 0% 0%;
-  --muted: 0 0% 85%; // More distinct muted
-  --muted-foreground: 0 0% 20%;
-  --accent: 180 100% 30%; // Darker teal
-  --accent-foreground: 0 0% 100%;
-  --border: 0 0% 50%; // Darker border
-  --input: 0 0% 100%;
-  --ring: 240 100% 50%;
-}
-
-.dark .high-contrast {
-   --foreground: 0 0% 100%;
-   --background: 0 0% 0%;
-   --card: 0 0% 0%;
-   --card-foreground: 0 0% 100%;
-   --popover: 0 0% 0%;
-   --popover-foreground: 0 0% 100%;
-   --primary: 60 100% 50%; // Bright yellow
-   --primary-foreground: 0 0% 0%;
-   --secondary: 0 0% 15%; // Darker secondary
-   --secondary-foreground: 0 0% 100%;
-   --muted: 0 0% 25%;
-   --muted-foreground: 0 0% 80%;
-   --accent: 180 100% 60%; // Brighter cyan
-   --accent-foreground: 0 0% 0%;
-   --border: 0 0% 70%; // Lighter border for dark high contrast
-   --input: 0 0% 0%;
-   --ring: 60 100% 50%;
-}
-*/
-
