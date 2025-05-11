@@ -323,30 +323,6 @@ export default function SuggestionsPage() {
                     </div>
                 )}
             </CardContent>
-             {/* Displaying AI Break Recommendation as a footer if available */}
-            {(isLoadingBreaks || breakRecommendations || errorBreaks) && (
-                <CardFooter className="pt-3 mt-auto border-t text-xs">
-                    {isLoadingBreaks ? (
-                        <div className="space-y-1 w-full">
-                            <Skeleton className="h-3 w-1/3" />
-                            <Skeleton className="h-3 w-full" />
-                            <Skeleton className="h-3 w-2/3" />
-                        </div>
-                    ): errorBreaks ? (
-                        <Alert variant="destructive" className="w-full text-xs p-2">
-                            <Terminal className="h-3 w-3" />
-                            <AlertTitle className="text-xs font-medium">AI Suggestion Error</AlertTitle>
-                            <AlertDescription className="text-xs">{errorBreaks}</AlertDescription>
-                        </Alert>
-                    ) : breakRecommendations && (
-                        <div className="space-y-1">
-                            <p><span className="font-semibold">AI Suggests:</span> {breakRecommendations.breakRecommendation}</p>
-                            <p><span className="font-semibold">Technique:</span> {breakRecommendations.productivityTechnique}</p>
-                            <p className="italic text-muted-foreground/80">Reasoning: {breakRecommendations.reasoning}</p>
-                        </div>
-                    )}
-                </CardFooter>
-            )}
         </Card>
       </div>
 
