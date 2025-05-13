@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Lightbulb, BarChart, Settings, Brain, Dumbbell } from 'lucide-react'; // Added Dumbbell
+import { Home, Lightbulb, BarChart, Settings, Brain, Dumbbell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -11,8 +11,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 const navItems = [
   { href: '/', label: 'Painel', icon: Home },
   { href: '/suggestions', label: 'Sugestões', icon: Lightbulb },
+  { href: '/memory-focus', label: 'Memória e Foco', icon: Brain }, // Added Memory & Focus Tab
   { href: '/history', label: 'Histórico', icon: BarChart },
-  { href: '/training', label: 'Treino', icon: Dumbbell }, // Added Training Tab
+  { href: '/training', label: 'Treino', icon: Dumbbell },
   { href: '/settings', label: 'Ajustes', icon: Settings },
 ];
 
