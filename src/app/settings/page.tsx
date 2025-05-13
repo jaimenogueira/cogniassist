@@ -34,9 +34,9 @@ const initialCognitiveAssistSettings: CognitiveAssistSettings = {
 
 export default function SettingsPage() {
     const { toast } = useToast()
-    const { theme, setTheme } = useTheme ? useTheme() : { theme: 'light', setTheme: () => console.warn("next-themes not configured") };
+    const { theme, setTheme } = useTheme ? useTheme() : { theme: 'light', setTheme: () => console.warn("next-themes não configurado") };
 
-    const [cognitiveMode, setCognitiveMode] = useState('standard'); // 'standard', 'senior', 'adhd', 'assist'
+    const [cognitiveMode, setCognitiveMode] = useState('standard'); 
     const [notificationFrequency, setNotificationFrequency] = useState('medium');
     const [notificationType, setNotificationType] = useState({ sound: true, visual: true, vibration: false });
     const [useHighContrast, setUseHighContrast] = useState(false);
@@ -54,7 +54,7 @@ export default function SettingsPage() {
 
 
      const handleSaveChanges = () => {
-        console.log('Saving settings:', {
+        console.log('Salvando configurações:', {
             cognitiveMode,
             notificationFrequency,
             notificationType,
@@ -73,8 +73,8 @@ export default function SettingsPage() {
         }));
 
         toast({
-          title: "Settings Saved",
-          description: "Your preferences have been updated.",
+          title: "Configurações Salvas",
+          description: "Suas preferências foram atualizadas.",
         })
       };
 
@@ -86,7 +86,7 @@ export default function SettingsPage() {
             setCognitiveMode(parsedSettings.cognitiveMode || 'standard');
             setNotificationFrequency(parsedSettings.notificationFrequency || 'medium');
             setNotificationType(parsedSettings.notificationType || { sound: true, visual: true, vibration: false });
-            if (useTheme && parsedSettings.theme) setTheme(parsedSettings.theme);
+            if (useTheme && parsedSettings.theme && setTheme) setTheme(parsedSettings.theme);
             setUseHighContrast(parsedSettings.useHighContrast || false);
             if (parsedSettings.cognitiveAssistSettings) {
                 setCognitiveAssistSettings(parsedSettings.cognitiveAssistSettings);
@@ -94,53 +94,54 @@ export default function SettingsPage() {
                 setCognitiveAssistSettings(initialCognitiveAssistSettings);
             }
           } catch (error) {
-            console.error("Failed to parse saved settings:", error);
+            console.error("Falha ao analisar configurações salvas:", error);
           }
         }
-      }, [setTheme, useTheme]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [setTheme]); // Removed useTheme from dependency array as it's a hook, not a state/prop
 
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
       <header>
         <h1 className="text-3xl font-bold text-foreground flex items-center">
-           <SlidersHorizontal className="mr-2 h-8 w-8 text-primary" /> Settings & Profile
+           <SlidersHorizontal className="mr-2 h-8 w-8 text-primary" /> Ajustes e Perfil
         </h1>
         <p className="text-muted-foreground">
-            Personalize CogniAssist to fit your cognitive needs and preferences.
+            Personalize o CogniAssist para atender às suas necessidades e preferências cognitivas.
         </p>
       </header>
 
       <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle className="flex items-center"><Eye className="mr-2 h-5 w-5 text-primary" /> Cognitive Profile</CardTitle>
-          <CardDescription>Choose a mode that best suits your needs for visual and alert adjustments.</CardDescription>
+          <CardTitle className="flex items-center"><Eye className="mr-2 h-5 w-5 text-primary" /> Perfil Cognitivo</CardTitle>
+          <CardDescription>Escolha um modo que melhor se adapte às suas necessidades para ajustes visuais e de alerta.</CardDescription>
         </CardHeader>
         <CardContent>
           <RadioGroup value={cognitiveMode} onValueChange={setCognitiveMode} className="space-y-2">
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="standard" id="mode-standard" />
-              <Label htmlFor="mode-standard">Standard Mode</Label>
+              <Label htmlFor="mode-standard">Modo Padrão</Label>
             </div>
-             <p className="text-sm text-muted-foreground pl-6">Default experience.</p>
+             <p className="text-sm text-muted-foreground pl-6">Experiência padrão.</p>
 
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="senior" id="mode-senior" />
-              <Label htmlFor="mode-senior">Senior Mode</Label>
+              <Label htmlFor="mode-senior">Modo Sênior</Label>
             </div>
-             <p className="text-sm text-muted-foreground pl-6">Larger text, simpler layout, stronger visual alerts.</p>
+             <p className="text-sm text-muted-foreground pl-6">Texto maior, layout mais simples, alertas visuais mais fortes.</p>
 
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="adhd" id="mode-adhd" />
-              <Label htmlFor="mode-adhd">ADHD Mode</Label>
+              <Label htmlFor="mode-adhd">Modo TDAH</Label>
             </div>
-             <p className="text-sm text-muted-foreground pl-6">Visual task blocks, frequent alerts, minimized distractions.</p>
+             <p className="text-sm text-muted-foreground pl-6">Blocos de tarefas visuais, alertas frequentes, distrações minimizadas.</p>
             
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="assist" id="mode-assist" />
-              <Label htmlFor="mode-assist">Cognitive Assist Mode</Label>
+              <Label htmlFor="mode-assist">Modo Assistência Cognitiva</Label>
             </div>
-             <p className="text-sm text-muted-foreground pl-6">Enhanced support for memory deficits, Alzheimer’s, or brain injury. Includes step-by-step guidance, repetitive reminders, and optional caregiver integration.</p>
+             <p className="text-sm text-muted-foreground pl-6">Suporte aprimorado para déficits de memória, Alzheimer ou lesão cerebral. Inclui orientação passo a passo, lembretes repetitivos e integração opcional com cuidador.</p>
           </RadioGroup>
         </CardContent>
       </Card>
@@ -150,8 +151,8 @@ export default function SettingsPage() {
         <Separator />
         <Card className="shadow-sm">
             <CardHeader>
-                <CardTitle className="flex items-center"><Accessibility className="mr-2 h-5 w-5 text-green-500" /> Cognitive Assist Features</CardTitle>
-                <CardDescription>Customize features for enhanced cognitive support.</CardDescription>
+                <CardTitle className="flex items-center"><Accessibility className="mr-2 h-5 w-5 text-green-500" /> Recursos de Assistência Cognitiva</CardTitle>
+                <CardDescription>Personalize recursos para suporte cognitivo aprimorado.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="space-y-2">
@@ -159,11 +160,11 @@ export default function SettingsPage() {
                         <Switch
                             id="step-by-step-tasks"
                             checked={cognitiveAssistSettings.stepByStepTasksEnabled}
-                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, stepByStepTasksEnabled: checked }))}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, stepByStepTasksEnabled: Boolean(checked) }))}
                         />
-                        <Label htmlFor="step-by-step-tasks" className="flex items-center gap-2"><ListChecks className="h-4 w-4"/> Step-by-Step Task Guidance</Label>
+                        <Label htmlFor="step-by-step-tasks" className="flex items-center gap-2"><ListChecks className="h-4 w-4"/> Orientação de Tarefas Passo a Passo</Label>
                     </div>
-                    <p className="text-xs text-muted-foreground pl-8">Breaks tasks into smaller, manageable steps with visual aids.</p>
+                    <p className="text-xs text-muted-foreground pl-8">Divide tarefas em etapas menores e gerenciáveis com auxílios visuais.</p>
                 </div>
 
                 <div className="space-y-2">
@@ -171,22 +172,22 @@ export default function SettingsPage() {
                         <Switch
                             id="audio-feedback"
                             checked={cognitiveAssistSettings.audioFeedbackEnabled}
-                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, audioFeedbackEnabled: checked }))}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, audioFeedbackEnabled: Boolean(checked) }))}
                         />
-                        <Label htmlFor="audio-feedback" className="flex items-center gap-2"><Volume2 className="h-4 w-4"/> Audio Confirmation & Feedback</Label>
+                        <Label htmlFor="audio-feedback" className="flex items-center gap-2"><Volume2 className="h-4 w-4"/> Confirmação e Feedback por Áudio</Label>
                     </div>
-                     <p className="text-xs text-muted-foreground pl-8">Provides voice cues for actions and reminders.</p>
+                     <p className="text-xs text-muted-foreground pl-8">Fornece dicas de voz para ações e lembretes.</p>
                 </div>
                  <div className="space-y-2">
                     <div className="flex items-center space-x-2">
                         <Switch
                             id="simplified-navigation"
                             checked={cognitiveAssistSettings.simplifiedNavigationEnabled}
-                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, simplifiedNavigationEnabled: checked }))}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, simplifiedNavigationEnabled: Boolean(checked) }))}
                         />
-                        <Label htmlFor="simplified-navigation" className="flex items-center gap-2"><Navigation className="h-4 w-4"/> Simplified Navigation</Label>
+                        <Label htmlFor="simplified-navigation" className="flex items-center gap-2"><Navigation className="h-4 w-4"/> Navegação Simplificada</Label>
                     </div>
-                     <p className="text-xs text-muted-foreground pl-8">Reduces complexity in menus and interface.</p>
+                     <p className="text-xs text-muted-foreground pl-8">Reduz a complexidade em menus e interface.</p>
                 </div>
 
                 <Separator />
@@ -196,18 +197,18 @@ export default function SettingsPage() {
                         <Switch
                             id="caregiver-integration"
                             checked={cognitiveAssistSettings.caregiverIntegrationEnabled}
-                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, caregiverIntegrationEnabled: checked }))}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, caregiverIntegrationEnabled: Boolean(checked) }))}
                         />
-                        <Label htmlFor="caregiver-integration" className="flex items-center gap-2"><Users className="h-4 w-4"/> Caregiver Integration</Label>
+                        <Label htmlFor="caregiver-integration" className="flex items-center gap-2"><Users className="h-4 w-4"/> Integração com Cuidador</Label>
                     </div>
-                     <p className="text-xs text-muted-foreground pl-8">Allows a designated caregiver to receive notifications and assist with management.</p>
+                     <p className="text-xs text-muted-foreground pl-8">Permite que um cuidador designado receba notificações e ajude no gerenciamento.</p>
                     {cognitiveAssistSettings.caregiverIntegrationEnabled && (
                          <div className="pl-8 pt-2">
-                            <Label htmlFor="caregiver-contact">Caregiver Contact (Email or Phone)</Label>
+                            <Label htmlFor="caregiver-contact">Contato do Cuidador (Email ou Telefone)</Label>
                             <Input
                                 id="caregiver-contact"
                                 type="text"
-                                placeholder="Enter caregiver's email or phone"
+                                placeholder="Insira o email ou telefone do cuidador"
                                 value={cognitiveAssistSettings.caregiverContact}
                                 onChange={(e) => setCognitiveAssistSettings(prev => ({...prev, caregiverContact: e.target.value}))}
                                 className="mt-1"
@@ -221,14 +222,13 @@ export default function SettingsPage() {
                         <Switch
                             id="medication-alerts"
                             checked={cognitiveAssistSettings.medicationAlertsEnabled}
-                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, medicationAlertsEnabled: checked }))}
+                            onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, medicationAlertsEnabled: Boolean(checked) }))}
                         />
-                        <Label htmlFor="medication-alerts" className="flex items-center gap-2"><Tablet className="h-4 w-4"/> Medication Alert System</Label>
+                        <Label htmlFor="medication-alerts" className="flex items-center gap-2"><Tablet className="h-4 w-4"/> Sistema de Alerta de Medicação</Label>
                     </div>
-                    <p className="text-xs text-muted-foreground pl-8">Set up and receive persistent medication reminders.</p>
-                    {/* Placeholder for medication setup UI if enabled */}
+                    <p className="text-xs text-muted-foreground pl-8">Configure e receba lembretes persistentes de medicação.</p>
                 </div>
-                 <p className="text-xs text-muted-foreground pt-2">Note: Repetitive reminders are automatically enhanced when Cognitive Assist Mode is active, based on your Notification Settings.</p>
+                 <p className="text-xs text-muted-foreground pt-2">Nota: Lembretes repetitivos são automaticamente aprimorados quando o Modo Assistência Cognitiva está ativo, com base nas suas Configurações de Notificação.</p>
             </CardContent>
         </Card>
         </>
@@ -239,52 +239,52 @@ export default function SettingsPage() {
 
       <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle className="flex items-center"><Bell className="mr-2 h-5 w-5 text-accent" /> Notification Settings</CardTitle>
-          <CardDescription>Control how and when you receive task reminders.</CardDescription>
+          <CardTitle className="flex items-center"><Bell className="mr-2 h-5 w-5 text-accent" /> Ajustes de Notificação</CardTitle>
+          <CardDescription>Controle como e quando você recebe lembretes de tarefas.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="notif-freq" className="block mb-2">Notification Frequency</Label>
+            <Label htmlFor="notif-freq" className="block mb-2">Frequência de Notificação</Label>
             <Select value={notificationFrequency} onValueChange={setNotificationFrequency}>
               <SelectTrigger id="notif-freq" className="w-[200px]">
-                <SelectValue placeholder="Select frequency" />
+                <SelectValue placeholder="Selecione a frequência" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="low">Low (Minimal)</SelectItem>
-                <SelectItem value="medium">Medium (Balanced)</SelectItem>
-                <SelectItem value="high">High (Frequent)</SelectItem>
-                 {cognitiveMode === 'assist' && <SelectItem value="persistent">Persistent (Cognitive Assist)</SelectItem>}
+                <SelectItem value="low">Baixa (Mínima)</SelectItem>
+                <SelectItem value="medium">Média (Equilibrada)</SelectItem>
+                <SelectItem value="high">Alta (Frequente)</SelectItem>
+                 {cognitiveMode === 'assist' && <SelectItem value="persistent">Persistente (Assist. Cognitiva)</SelectItem>}
               </SelectContent>
             </Select>
-            {cognitiveMode === 'assist' && <p className="text-xs text-muted-foreground mt-1">Persistent reminders require user interaction to dismiss.</p>}
+            {cognitiveMode === 'assist' && <p className="text-xs text-muted-foreground mt-1">Lembretes persistentes exigem interação do usuário para dispensar.</p>}
           </div>
 
           <div>
-             <Label className="block mb-2">Notification Types</Label>
+             <Label className="block mb-2">Tipos de Notificação</Label>
              <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                     <Switch
                         id="notif-sound"
                         checked={notificationType.sound}
-                        onCheckedChange={(checked) => setNotificationType(prev => ({ ...prev, sound: checked }))}
+                        onCheckedChange={(checked) => setNotificationType(prev => ({ ...prev, sound: Boolean(checked) }))}
                     />
-                    <Label htmlFor="notif-sound" className="flex items-center gap-2"><Volume2 className="h-4 w-4"/> Sound Alerts</Label>
+                    <Label htmlFor="notif-sound" className="flex items-center gap-2"><Volume2 className="h-4 w-4"/> Alertas Sonoros</Label>
                 </div>
                  <div className="flex items-center space-x-2">
                     <Switch
                         id="notif-visual"
                         checked={notificationType.visual}
-                        onCheckedChange={(checked) => setNotificationType(prev => ({ ...prev, visual: checked }))}
+                        onCheckedChange={(checked) => setNotificationType(prev => ({ ...prev, visual: Boolean(checked) }))}
                     />
-                    <Label htmlFor="notif-visual" className="flex items-center gap-2"><Eye className="h-4 w-4"/> Visual Alerts (Pop-ups)</Label>
+                    <Label htmlFor="notif-visual" className="flex items-center gap-2"><Eye className="h-4 w-4"/> Alertas Visuais (Pop-ups)</Label>
                 </div>
                  <div className="flex items-center space-x-2">
                     <Switch
                         id="notif-vibration"
                         checked={notificationType.vibration}
-                        onCheckedChange={(checked) => setNotificationType(prev => ({ ...prev, vibration: checked }))}
+                        onCheckedChange={(checked) => setNotificationType(prev => ({ ...prev, vibration: Boolean(checked) }))}
                     />
-                    <Label htmlFor="notif-vibration" className="flex items-center gap-2"><Bell className="h-4 w-4"/> Vibration (Mobile)</Label>
+                    <Label htmlFor="notif-vibration" className="flex items-center gap-2"><Bell className="h-4 w-4"/> Vibração (Celular)</Label>
                 </div>
              </div>
           </div>
@@ -295,25 +295,25 @@ export default function SettingsPage() {
 
        <Card className="shadow-sm">
          <CardHeader>
-           <CardTitle className="flex items-center"><Palette className="mr-2 h-5 w-5 text-purple-500" /> Appearance</CardTitle>
-           <CardDescription>Customize the look and feel of the app.</CardDescription>
+           <CardTitle className="flex items-center"><Palette className="mr-2 h-5 w-5 text-purple-500" /> Aparência</CardTitle>
+           <CardDescription>Personalize a aparência do aplicativo.</CardDescription>
          </CardHeader>
          <CardContent className="space-y-4">
-            {useTheme && (
+            {useTheme && setTheme && ( // ensure setTheme is available
                  <div>
-                    <Label className="block mb-2">Theme</Label>
+                    <Label className="block mb-2">Tema</Label>
                     <RadioGroup value={theme} onValueChange={setTheme} className="flex space-x-4">
                         <div className="flex items-center space-x-2">
                         <RadioGroupItem value="light" id="theme-light" />
-                        <Label htmlFor="theme-light">Light</Label>
+                        <Label htmlFor="theme-light">Claro</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                         <RadioGroupItem value="dark" id="theme-dark" />
-                        <Label htmlFor="theme-dark">Dark</Label>
+                        <Label htmlFor="theme-dark">Escuro</Label>
                         </div>
                          <div className="flex items-center space-x-2">
                         <RadioGroupItem value="system" id="theme-system" />
-                        <Label htmlFor="theme-system">System</Label>
+                        <Label htmlFor="theme-system">Sistema</Label>
                         </div>
                     </RadioGroup>
                  </div>
@@ -325,14 +325,14 @@ export default function SettingsPage() {
                     checked={useHighContrast}
                     onCheckedChange={setUseHighContrast}
                   />
-                  <Label htmlFor="high-contrast" className="flex items-center gap-2"><Contrast className="h-4 w-4"/> High Contrast Mode</Label>
+                  <Label htmlFor="high-contrast" className="flex items-center gap-2"><Contrast className="h-4 w-4"/> Modo de Alto Contraste</Label>
             </div>
-            <p className="text-sm text-muted-foreground pl-8">Increases text and element contrast for better visibility.</p>
+            <p className="text-sm text-muted-foreground pl-8">Aumenta o contraste de texto e elementos para melhor visibilidade.</p>
          </CardContent>
        </Card>
 
         <div className="flex justify-end pt-4">
-            <Button onClick={handleSaveChanges} size="lg">Save Changes</Button>
+            <Button onClick={handleSaveChanges} size="lg">Salvar Alterações</Button>
         </div>
     </div>
   );

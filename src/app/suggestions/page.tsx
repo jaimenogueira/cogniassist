@@ -16,54 +16,56 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/lib/utils';
 
 
-// Productivity Tips Data
 const productivityTips = [
   {
     id: 'pomodoro',
-    title: 'Pomodoro Technique',
-    tip: 'Work for 25 minutes, then take a 5-minute break. Repeat 4 times, then rest longer.',
-    icon: Clock, // Represents ⏱️
+    title: 'Técnica Pomodoro',
+    tip: 'Trabalhe por 25 minutos, depois faça uma pausa de 5 minutos. Repita 4 vezes, depois descanse mais.',
+    icon: Clock, 
     bgColor: 'bg-red-100 dark:bg-red-900/30',
     iconColor: 'text-red-500 dark:text-red-400',
   },
   {
     id: 'stretch',
-    title: 'Stretch Break', // Updated title
-    tip: 'Stand up and do a quick stretch to refresh your body between long tasks.',
-    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 20M4 20h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4H4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4Z"/><path d="M4 12h8"/><path d="M12 12v8"/></svg>, // Represents 🤸‍♂️
+    title: 'Pausa para Alongamento', 
+    tip: 'Levante-se e faça um alongamento rápido para refrescar o corpo entre tarefas longas.',
+    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 20M4 20h12a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4H4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4Z"/><path d="M4 12h8"/><path d="M12 12v8"/></svg>, 
     bgColor: 'bg-green-100 dark:bg-green-900/30',
     iconColor: 'text-green-500 dark:text-green-400',
   },
    {
     id: 'changeEnv',
-    title: 'Change Environment',
-    tip: 'Try working from a different location when you feel stuck or unfocused.', // Tip updated
-    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 12h20"/><path d="m5 12-1-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2l-1 7"/><path d="M12 12v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>, // Represents 🌿
+    title: 'Mude de Ambiente',
+    tip: 'Tente trabalhar de um local diferente quando se sentir preso ou desfocado.', 
+    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 12h20"/><path d="m5 12-1-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2l-1 7"/><path d="M12 12v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>, 
     bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
     iconColor: 'text-yellow-500 dark:text-yellow-400',
   },
   {
     id: 'hydrate',
-    title: 'Hydration Reminder', // Updated title
-    tip: 'Drink a glass of water every 2 hours to stay mentally sharp.', // Tip updated
-    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s5-4 5-10V6a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3v6c0 6 5 10 5 10z"/><path d="M8.5 9a2.5 2.5 0 1 1 5 0"/></svg>, // Represents 💧
+    title: 'Lembrete de Hidratação', 
+    tip: 'Beba um copo de água a cada 2 horas para se manter mentalmente alerta.', 
+    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s5-4 5-10V6a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3v6c0 6 5 10 5 10z"/><path d="M8.5 9a2.5 2.5 0 1 1 5 0"/></svg>, 
     bgColor: 'bg-blue-100 dark:bg-blue-900/30',
     iconColor: 'text-blue-500 dark:text-blue-400',
   },
   {
     id: 'restProductive',
-    title: 'Rest Is Productive',
-    tip: 'Taking breaks helps your brain process and retain information better.', // Tip updated
-    icon: Brain, // Represents 🧠
+    title: 'Descansar é Produtivo',
+    tip: 'Fazer pausas ajuda seu cérebro a processar e reter informações melhor.', 
+    icon: Brain, 
     bgColor: 'bg-purple-100 dark:bg-purple-900/30',
     iconColor: 'text-purple-500 dark:text-purple-400',
   },
 ];
 
 const timeBlockIcons: Record<string, React.ElementType> = {
-  'Morning Focus': Brain,
-  'Midday Momentum': Briefcase,
-  'Evening Creativity': Palette,
+  'Foco Matinal': Brain,
+  'Ritmo do Meio-dia': Briefcase,
+  'Criatividade Noturna': Palette,
+  'Morning Focus': Brain, // Fallback
+  'Midday Momentum': Briefcase, // Fallback
+  'Evening Creativity': Palette, // Fallback
 };
 
 
@@ -84,23 +86,19 @@ export default function SuggestionsPage() {
   const [adaptTimeSuggestions, setAdaptTimeSuggestions] = useState(true);
   const [reminderTone, setReminderTone] = useState<'motivational' | 'neutral' | 'gentle'>('neutral');
 
-
-  // Mock data for AI input - replace with actual user data later
-  const mockFocusHistory = "High focus between 9 AM - 11 AM. Low focus around 2 PM. Usually finishes tasks quickly in the morning.";
-  const mockPastCompletion = "Completed 'Project Report' at 10:30 AM yesterday. Finished 'Client Call Prep' at 9:15 AM today.";
-  const mockTaskHistory = "Completed: Project Report (2h), Client Call Prep (1h). In Progress: Market Research (Est. 3h). Missed: Follow up email (due yesterday). Habit: Language Practice (last done 3 days ago).";
-  const mockFocusPatterns = "Peak focus 9-11 AM. Dip around 2 PM. Often distracted by notifications in the afternoon.";
-  const mockUserHabits = "User often works late, checks emails first thing. Occasionally forgets to take breaks during long work sessions. Prefers visual reminders.";
-  const mockCalendarEvents = "Team Meeting at 2 PM today. Dentist appointment tomorrow at 10 AM.";
-  // const mockMood = "stressed"; // Optional: could be dynamic
-
+  const mockFocusHistory = "Foco alto entre 9h - 11h. Foco baixo por volta das 14h. Geralmente termina tarefas rapidamente pela manhã.";
+  const mockPastCompletion = "Concluído 'Relatório do Projeto' às 10:30 de ontem. Finalizado 'Preparação Chamada Cliente' às 9:15 de hoje.";
+  const mockTaskHistory = "Concluído: Relatório do Projeto (2h), Preparação Chamada Cliente (1h). Em Progresso: Pesquisa de Mercado (Est. 3h). Perdido: E-mail de acompanhamento (venceu ontem). Hábito: Prática de Idioma (última vez há 3 dias).";
+  const mockFocusPatterns = "Pico de foco 9-11h. Queda por volta das 14h. Frequentemente distraído por notificações à tarde.";
+  const mockUserHabits = "Usuário frequentemente trabalha até tarde, verifica e-mails logo cedo. Ocasionalmente esquece de fazer pausas durante longas sessões de trabalho. Prefere lembretes visuais.";
+  const mockCalendarEvents = "Reunião de equipe às 14h hoje. Consulta no dentista amanhã às 10h.";
 
   const fetchTimeSuggestions = useCallback(async () => {
     setIsLoadingTimes(true);
     setErrorTimes(null);
     try {
       const input: SuggestTaskTimesInput = {
-        taskType: 'Deep Work Session',
+        taskType: 'Sessão de Trabalho Focado',
         focusHistory: mockFocusHistory,
         pastTaskCompletionTimes: mockPastCompletion,
         adaptAutomatically: adaptTimeSuggestions,
@@ -108,16 +106,15 @@ export default function SuggestionsPage() {
       const result = await suggestTaskTimes(input);
       setTimeSuggestions(result);
     } catch (err) {
-      console.error('Error fetching time suggestions:', err);
-      setErrorTimes('Failed to load time suggestions. Using default suggestions.');
-      // Fallback to default time suggestions on error
+      console.error('Erro ao buscar sugestões de horários:', err);
+      setErrorTimes('Falha ao carregar sugestões de horários. Usando sugestões padrão.');
       setTimeSuggestions({
         timeBlocks: [
-          { title: 'Morning Focus', timeRange: '8 AM – 11 AM', description: 'Ideal for deep work and tasks requiring high concentration.' },
-          { title: 'Midday Momentum', timeRange: '12 PM – 3 PM', description: 'Suitable for meetings, communication, and collaboration.' },
-          { title: 'Evening Creativity', timeRange: '6 PM – 9 PM', description: 'Good for creative thinking or reflective tasks.' },
+          { title: 'Foco Matinal', timeRange: '8h – 11h', description: 'Ideal para trabalho focado e tarefas que exigem alta concentração e engajamento cognitivo.' },
+          { title: 'Ritmo do Meio-dia', timeRange: '12h – 15h', description: 'Adequado para reuniões, comunicação e trabalho colaborativo, quando os níveis de energia permanecem estáveis.' },
+          { title: 'Criatividade Noturna', timeRange: '18h – 21h', description: 'Uma ótima janela para pensamento criativo, brainstorming ou tarefas reflexivas.' },
         ],
-        reasoning: 'Default suggestions are shown due to an error fetching personalized data.',
+        reasoning: 'Sugestões padrão exibidas devido a um erro ao buscar dados personalizados.',
       });
     } finally {
       setIsLoadingTimes(false);
@@ -135,8 +132,8 @@ export default function SuggestionsPage() {
       const result = await recommendBreaks(input);
       setBreakRecommendations(result);
     } catch (err) {
-      console.error('Error fetching break recommendations:', err);
-      setErrorBreaks('Failed to load AI break recommendations.');
+      console.error('Erro ao buscar recomendações de pausa:', err);
+      setErrorBreaks('Falha ao carregar recomendações de pausa da IA.');
     } finally {
       setIsLoadingBreaks(false);
     }
@@ -152,16 +149,15 @@ export default function SuggestionsPage() {
         upcomingCalendarEvents: mockCalendarEvents,
         recentTaskActivity: mockTaskHistory,
         preferredTone: reminderTone,
-        // mood: mockMood, // Pass mood if available
       };
       const result = await generateUserReminders(input);
       setUserReminders(result);
     } catch (err) {
-      console.error('Error fetching user reminders:', err);
-      setErrorReminders('Failed to load smart reminders.');
+      console.error('Erro ao buscar lembretes do usuário:', err);
+      setErrorReminders('Falha ao carregar lembretes inteligentes.');
       setUserReminders({
-        reminders: ["Could not generate smart reminders at this time. Check back later!"],
-        reasoning: "An error occurred while attempting to fetch smart reminders.",
+        reminders: ["Não foi possível gerar lembretes inteligentes no momento. Verifique mais tarde!"],
+        reasoning: "Ocorreu um erro ao tentar buscar lembretes inteligentes.",
       });
     } finally {
       setIsLoadingReminders(false);
@@ -181,7 +177,6 @@ export default function SuggestionsPage() {
 
   useEffect(() => {
     fetchBreakRecommendations();
-     // Fetch initial static tip when break recommendations are (or would be) fetched
     handleRefreshStaticTip();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchBreakRecommendations]); 
@@ -190,20 +185,15 @@ export default function SuggestionsPage() {
     fetchUserReminders();
   }, [fetchUserReminders]);
 
-
-  // Auto-rotation for productivity tips
   useEffect(() => {
     if (productivityTips.length === 0 || isLoadingBreaks) return;
-
     const intervalId = setInterval(() => {
       if (productivityTips.length > 0) {
         setCurrentTipIndex(prevIndex => (prevIndex + 1) % productivityTips.length);
       }
-    }, 7000); // Rotate every 7 seconds
-
+    }, 7000); 
     return () => clearInterval(intervalId);
-  }, [isLoadingBreaks]); 
-
+  }, [isLoadingBreaks, productivityTips.length]); 
 
   const handleRefreshAll = () => {
     fetchTimeSuggestions();
@@ -214,40 +204,38 @@ export default function SuggestionsPage() {
   
   const currentProdTip = productivityTips.length > 0 ? productivityTips[currentTipIndex] : null;
 
-
   return (
     <div className="space-y-6">
       <header className="flex flex-wrap justify-between items-center gap-4">
         <h1 className="text-3xl font-bold text-foreground flex items-center">
-           <Lightbulb className="mr-2 h-8 w-8 text-accent" /> Smart Suggestions
+           <Lightbulb className="mr-2 h-8 w-8 text-accent" /> Sugestões Inteligentes
         </h1>
          <Button onClick={handleRefreshAll} variant="outline" disabled={isLoadingTimes || isLoadingBreaks || isLoadingReminders}>
            {(isLoadingTimes || isLoadingBreaks || isLoadingReminders) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-           Refresh All
+           Atualizar Tudo
          </Button>
       </header>
 
        <p className="text-muted-foreground">
-         Let AI analyze your patterns and suggest optimal times, breaks, and reminders to enhance your productivity and well-being.
+         Deixe a IA analisar seus padrões e sugerir horários, pausas e lembretes ideais para melhorar sua produtividade e bem-estar.
        </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Ideal Task Times Card */}
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
             <div className="flex justify-between items-start">
                 <div>
-                    <CardTitle className="flex items-center"><Clock className="mr-2 h-5 w-5 text-primary" /> Ideal Task Times</CardTitle>
-                    <CardDescription>Based on your focus history & circadian rhythms.</CardDescription>
+                    <CardTitle className="flex items-center"><Clock className="mr-2 h-5 w-5 text-primary" /> Horários Ideais para Tarefas</CardTitle>
+                    <CardDescription>Com base no seu histórico de foco e ritmos circadianos.</CardDescription>
                 </div>
                 <div className="flex items-center space-x-2 pt-1">
                     <Switch
                         id="adapt-time-suggestions"
                         checked={adaptTimeSuggestions}
                         onCheckedChange={setAdaptTimeSuggestions}
-                        aria-label="Adapt time suggestions automatically"
+                        aria-label="Adaptar sugestões de horário automaticamente"
                     />
-                    <Label htmlFor="adapt-time-suggestions" className="text-xs text-muted-foreground">Adapt AI</Label>
+                    <Label htmlFor="adapt-time-suggestions" className="text-xs text-muted-foreground">Adaptar IA</Label>
                 </div>
             </div>
           </CardHeader>
@@ -263,10 +251,10 @@ export default function SuggestionsPage() {
                 ))}
                  <Skeleton className="h-4 w-5/6 mt-2" />
               </div>
-            ) : errorTimes && (!timeSuggestions || timeSuggestions.timeBlocks.length === 0) ? ( // Show error only if no fallback data
+            ) : errorTimes && (!timeSuggestions || timeSuggestions.timeBlocks.length === 0) ? ( 
               <Alert variant="destructive">
                 <Terminal className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>Erro</AlertTitle>
                 <AlertDescription>{errorTimes}</AlertDescription>
               </Alert>
             ) : timeSuggestions && timeSuggestions.timeBlocks && timeSuggestions.timeBlocks.length > 0 ? (
@@ -288,23 +276,22 @@ export default function SuggestionsPage() {
                 <p className="text-xs text-muted-foreground italic pt-2">{timeSuggestions.reasoning}</p>
               </>
             ) : (
-              <p className="text-muted-foreground">No time suggestions available.</p>
+              <p className="text-muted-foreground">Nenhuma sugestão de horário disponível.</p>
             )}
           </CardContent>
         </Card>
 
-        {/* Break & Productivity Tip Card (Panel) */}
         <Card className="shadow-sm hover:shadow-md transition-shadow flex flex-col">
             <CardHeader className="flex flex-row items-start justify-between pb-2">
                 <div className="flex-1">
                     <CardTitle className="flex items-center text-lg">
-                        <Coffee className="mr-2 h-5 w-5 text-amber-600" /> Productivity Tip
+                        <Coffee className="mr-2 h-5 w-5 text-amber-600" /> Dica de Produtividade
                     </CardTitle>
-                    <CardDescription className="text-xs">A new tip to optimize your workflow.</CardDescription>
+                    <CardDescription className="text-xs">Uma nova dica para otimizar seu fluxo de trabalho.</CardDescription>
                 </div>
-                <Button onClick={handleRefreshStaticTip} variant="ghost" size="icon" className="h-8 w-8 shrink-0" title="Next Tip" disabled={isLoadingBreaks && !currentProdTip}>
+                <Button onClick={handleRefreshStaticTip} variant="ghost" size="icon" className="h-8 w-8 shrink-0" title="Próxima Dica" disabled={isLoadingBreaks && !currentProdTip}>
                     <RefreshCw className={cn("h-4 w-4", isLoadingBreaks && !currentProdTip && "animate-spin")} />
-                    <span className="sr-only">Next Tip</span>
+                    <span className="sr-only">Próxima Dica</span>
                 </Button>
             </CardHeader>
             <CardContent className={cn("flex-grow p-4 pt-2 rounded-b-md", currentProdTip?.bgColor, !currentProdTip && "flex items-center justify-center")}>
@@ -318,54 +305,52 @@ export default function SuggestionsPage() {
                 ) : currentProdTip ? (
                     <div className="flex flex-col items-center text-center h-full justify-center space-y-2">
                         <h3 className="text-lg font-semibold text-foreground">{currentProdTip.title}</h3>
-                        <currentProdTip.icon className={cn("h-10 w-10 my-1", currentProdTip.iconColor)} data-ai-hint="tip illustration" />
+                        <currentProdTip.icon className={cn("h-10 w-10 my-1", currentProdTip.iconColor)} data-ai-hint="ilustração dica" />
                         <p className="text-xs text-muted-foreground px-2 leading-relaxed">{currentProdTip.tip}</p>
                     </div>
                  ) : errorBreaks ? (
                     <Alert variant="destructive" className="w-full">
                         <Terminal className="h-4 w-4" />
-                        <AlertTitle>Error</AlertTitle>
+                        <AlertTitle>Erro</AlertTitle>
                         <AlertDescription>{errorBreaks}</AlertDescription>
                      </Alert>
                 ) : (
                     <div className="flex flex-col items-center text-center">
                         <Lightbulb className="h-10 w-10 text-muted-foreground mb-2" />
-                        <p className="text-sm text-muted-foreground">No productivity tips available right now.</p>
+                        <p className="text-sm text-muted-foreground">Nenhuma dica de produtividade disponível no momento.</p>
                     </div>
                 )}
             </CardContent>
-             {/* AI Break Recommendation (Optional - if API supports it and not part of static tips) */}
              {breakRecommendations && !isLoadingBreaks && !errorBreaks && (
               <CardFooter className="pt-3 border-t border-border/50">
                 <div className="text-xs space-y-1">
-                    <p className="font-semibold text-foreground">AI Suggested Break:</p>
-                    <p className="text-muted-foreground"><span className="font-medium text-foreground/80">Recommendation:</span> {breakRecommendations.breakRecommendation}</p>
-                    <p className="text-muted-foreground"><span className="font-medium text-foreground/80">Technique:</span> {breakRecommendations.productivityTechnique}</p>
-                    <p className="text-muted-foreground italic"><span className="font-medium text-foreground/80">Reasoning:</span> {breakRecommendations.reasoning}</p>
+                    <p className="font-semibold text-foreground">Pausa Sugerida pela IA:</p>
+                    <p className="text-muted-foreground"><span className="font-medium text-foreground/80">Recomendação:</span> {breakRecommendations.breakRecommendation}</p>
+                    <p className="text-muted-foreground"><span className="font-medium text-foreground/80">Técnica:</span> {breakRecommendations.productivityTechnique}</p>
+                    <p className="text-muted-foreground italic"><span className="font-medium text-foreground/80">Justificativa:</span> {breakRecommendations.reasoning}</p>
                 </div>
               </CardFooter>
             )}
         </Card>
       </div>
 
-       {/* Smart Reminders Card */}
        <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
             <div className="flex flex-wrap justify-between items-center gap-2">
                 <div>
-                    <CardTitle className="flex items-center"><Bell className="mr-2 h-5 w-5 text-fuchsia-500" /> Smart Reminders</CardTitle>
-                    <CardDescription>AI-generated reminders based on your habits and context.</CardDescription>
+                    <CardTitle className="flex items-center"><Bell className="mr-2 h-5 w-5 text-fuchsia-500" /> Lembretes Inteligentes</CardTitle>
+                    <CardDescription>Lembretes gerados por IA com base nos seus hábitos e contexto.</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Label htmlFor="reminder-tone" className="text-xs text-muted-foreground whitespace-nowrap">Reminder Tone:</Label>
+                    <Label htmlFor="reminder-tone" className="text-xs text-muted-foreground whitespace-nowrap">Tom do Lembrete:</Label>
                     <Select value={reminderTone} onValueChange={(value) => setReminderTone(value as typeof reminderTone)}>
                         <SelectTrigger id="reminder-tone" className="w-[150px] h-8 text-xs">
-                            <SelectValue placeholder="Select tone" />
+                            <SelectValue placeholder="Selecione o tom" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="motivational" className="text-xs">Motivational</SelectItem>
-                            <SelectItem value="neutral" className="text-xs">Neutral</SelectItem>
-                            <SelectItem value="gentle" className="text-xs">Gentle</SelectItem>
+                            <SelectItem value="motivational" className="text-xs">Motivacional</SelectItem>
+                            <SelectItem value="neutral" className="text-xs">Neutro</SelectItem>
+                            <SelectItem value="gentle" className="text-xs">Gentil</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -378,10 +363,10 @@ export default function SuggestionsPage() {
                 <Skeleton className="h-4 w-5/6" />
                 <Skeleton className="h-4 w-3/4" />
               </div>
-            ) : errorReminders && (!userReminders || userReminders.reminders.length === 0 || (userReminders.reminders[0] && userReminders.reminders[0].includes("Could not generate"))) ? (
+            ) : errorReminders && (!userReminders || userReminders.reminders.length === 0 || (userReminders.reminders[0] && userReminders.reminders[0].includes("Não foi possível gerar"))) ? (
               <Alert variant="destructive">
                 <Terminal className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>Erro</AlertTitle>
                 <AlertDescription>{errorReminders}</AlertDescription>
               </Alert>
             ) : userReminders && userReminders.reminders && userReminders.reminders.length > 0 ? (
@@ -394,7 +379,7 @@ export default function SuggestionsPage() {
                     </Alert>
                 ))
             ) : (
-              <p className="text-muted-foreground text-sm text-center py-2">No smart reminders for you right now. Check back later!</p>
+              <p className="text-muted-foreground text-sm text-center py-2">Nenhum lembrete inteligente para você no momento. Volte mais tarde!</p>
             )}
              {userReminders && userReminders.reasoning && !isLoadingReminders && (
                  <p className="text-xs text-muted-foreground italic pt-2 text-center">
@@ -402,15 +387,7 @@ export default function SuggestionsPage() {
                  </p>
              )}
           </CardContent>
-          {/* Feedback system placeholder - to be implemented if needed */}
-          {/* <CardFooter className="pt-3 border-t">
-            <p className="text-xs text-muted-foreground">Was this reminder helpful?</p>
-            <Button variant="ghost" size="sm" className="ml-auto text-xs">Yes</Button>
-            <Button variant="ghost" size="sm" className="text-xs">No</Button>
-          </CardFooter> */}
         </Card>
     </div>
   );
 }
-        
-

@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 interface Reminder {
   id: string;
   title: string;
-  time: string; // Can be specific time or relative like "Tomorrow"
+  time: string; 
 }
 
 interface ReminderListProps {
@@ -17,7 +17,7 @@ interface ReminderListProps {
 
 export function ReminderList({ reminders }: ReminderListProps) {
   if (reminders.length === 0) {
-    return <p className="text-muted-foreground text-center py-4">No upcoming reminders.</p>;
+    return <p className="text-muted-foreground text-center py-4">Nenhum lembrete futuro.</p>;
   }
 
   return (
@@ -38,8 +38,7 @@ export function ReminderList({ reminders }: ReminderListProps) {
               {reminder.time}
             </p>
           </div>
-          {/* Add actions like 'Dismiss' or 'Snooze' later if needed */}
-          {/* <Button variant="ghost" size="sm" className="text-xs">Dismiss</Button> */}
+          {/* <Button variant="ghost" size="sm" className="text-xs">Dispensar</Button> */}
         </div>
       ))}
     </div>

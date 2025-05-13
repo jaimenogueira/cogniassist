@@ -5,15 +5,15 @@ import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { Flame, AlertTriangle, ChevronDown } from 'lucide-react'; // Icons for priority
+import { Flame, AlertTriangle, ChevronDown } from 'lucide-react'; 
 
 interface Task {
   id: string;
   title: string;
-  time?: string; // Optional time
+  time?: string; 
   completed: boolean;
   priority: 'low' | 'medium' | 'high';
-  description?: string; // Optional description
+  description?: string; 
 }
 
 interface TaskListProps {
@@ -41,17 +41,26 @@ export function TaskList({ tasks, onToggleComplete }: TaskListProps) {
         case 'high':
             return 'destructive';
         case 'medium':
-            return 'secondary'; // Use secondary which might map to a yellow-ish or gray in theme
+            return 'secondary'; 
         case 'low':
-            return 'outline'; // Use outline which might map to green-ish or gray in theme
+            return 'outline'; 
         default:
             return 'default';
         }
     };
 
+    const getPriorityText = (priority: 'low' | 'medium' | 'high') => {
+        switch (priority) {
+            case 'low': return 'Baixa';
+            case 'medium': return 'Média';
+            case 'high': return 'Alta';
+            default: return priority;
+        }
+    };
+
 
   if (tasks.length === 0) {
-    return <p className="text-muted-foreground text-center py-4">No tasks for today yet!</p>;
+    return <p className="text-muted-foreground text-center py-4">Nenhuma tarefa para hoje ainda!</p>;
   }
 
   return (
@@ -68,7 +77,7 @@ export function TaskList({ tasks, onToggleComplete }: TaskListProps) {
             id={`task-${task.id}`}
             checked={task.completed}
             onCheckedChange={() => onToggleComplete(task.id)}
-            aria-label={`Mark task "${task.title}" as ${task.completed ? 'incomplete' : 'complete'}`}
+            aria-label={`Marcar tarefa "${task.title}" como ${task.completed ? 'incompleta' : 'completa'}`}
             className="transition-transform transform hover:scale-110"
           />
           <div className="flex-1">
@@ -92,7 +101,7 @@ export function TaskList({ tasks, onToggleComplete }: TaskListProps) {
           </div>
           <Badge variant={getPriorityBadgeVariant(task.priority)} className="capitalize flex items-center gap-1 px-2 py-0.5">
             {getPriorityIcon(task.priority)}
-            {task.priority}
+            {getPriorityText(task.priority)}
           </Badge>
         </div>
       ))}

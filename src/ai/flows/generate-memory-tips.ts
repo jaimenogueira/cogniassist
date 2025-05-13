@@ -1,3 +1,4 @@
+
 // src/ai/flows/generate-memory-tips.ts
 'use server';
 /**
@@ -14,25 +15,25 @@ import {z} from 'genkit';
 const GenerateMemoryTipsInputSchema = z.object({
   cognitiveProfile: z
     .string()
-    .describe('The user cognitive profile, e.g., Senior Mode, ADHD Mode.'),
+    .describe('O perfil cognitivo do usuário, ex: Modo Sênior, Modo TDAH.'),
   pastBehavior: z
     .string()
-    .describe('The user past behavior related to task completion and focus.'),
+    .describe('O comportamento passado do usuário relacionado à conclusão de tarefas e foco.'),
 });
 export type GenerateMemoryTipsInput = z.infer<typeof GenerateMemoryTipsInputSchema>;
 
 const GenerateMemoryTipsOutputSchema = z.object({
   memoryTips: z
     .array(z.string())
-    .describe('An array of personalized memory tips for the user.'),
+    .describe('Uma lista de dicas de memória personalizadas para o usuário.'),
 });
 export type GenerateMemoryTipsOutput = z.infer<typeof GenerateMemoryTipsOutputSchema>;
 
 const defaultMemoryTips: GenerateMemoryTipsOutput = {
     memoryTips: [
-        "Break routines into smaller, manageable sections.",
-        "Associate new information with things you already know.",
-        "Practice mindfulness to improve focus and memory encoding."
+        "Divida as rotinas em seções menores e gerenciáveis.",
+        "Associe novas informações a coisas que você já conhece.",
+        "Pratique a atenção plena (mindfulness) para melhorar o foco e a codificação da memória."
     ]
 };
 
@@ -46,17 +47,17 @@ const prompt = ai.definePrompt({
     schema: z.object({
       cognitiveProfile: z
         .string()
-        .describe('The user cognitive profile, e.g., Senior Mode, ADHD Mode.'),
+        .describe('The user cognitive profile, e.g., Senior Mode, ADHD Mode.'), // English for LLM understanding
       pastBehavior: z
         .string()
-        .describe('The user past behavior related to task completion and focus.'),
+        .describe('The user past behavior related to task completion and focus.'), // English for LLM understanding
     }),
   },
   output: {
     schema: z.object({
       memoryTips: z
         .array(z.string())
-        .describe('An array of personalized memory tips for the user.'),
+        .describe('Uma lista de dicas de memória personalizadas para o usuário.'), // Output description in Portuguese
     }),
   },
   prompt: `You are an AI assistant designed to provide personalized memory tips based on user cognitive profile and past behavior.
@@ -64,7 +65,7 @@ const prompt = ai.definePrompt({
   Cognitive Profile: {{{cognitiveProfile}}}
   Past Behavior: {{{pastBehavior}}}
 
-  Generate 3 memory tips tailored to the user. Return the tips as a numbered list.
+  Generate 3 memory tips tailored to the user. Return the tips as a numbered list. If the user's preferred language is Portuguese, provide the tips in Portuguese.
   `,
 });
 
@@ -82,11 +83,10 @@ async (input: GenerateMemoryTipsInput) => {
     if (output && output.memoryTips && output.memoryTips.length > 0) {
         return output;
     }
-    console.warn("AI output for generateMemoryTipsFlow was incomplete or empty, returning default tips.");
+    console.warn("A saída da IA para generateMemoryTipsFlow estava incompleta ou vazia, retornando dicas padrão.");
     return defaultMemoryTips;
   } catch (error) {
-    console.error("Error in generateMemoryTipsFlow calling prompt:", error);
-    // Fallback to default suggestions if AI fails or throws an error
+    console.error("Erro em generateMemoryTipsFlow ao chamar o prompt:", error);
     return defaultMemoryTips;
   }
 });

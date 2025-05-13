@@ -1,11 +1,12 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, Clock } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -43,15 +44,12 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 
-// Define Zod schema for form validation
 const taskFormSchema = z.object({
-  title: z.string().min(1, { message: 'Task title is required.' }),
+  title: z.string().min(1, { message: 'O título da tarefa é obrigatório.' }),
   date: z.date().optional(),
-  time: z.string().optional(), // Optional time string e.g., "14:30"
-  // recurrence: z.enum(['one-time', 'daily', 'weekly', 'custom']).default('one-time'),
+  time: z.string().optional(),
   description: z.string().optional(),
   priority: z.enum(['low', 'medium', 'high']).default('medium'),
-  // category: z.string().optional(), // Optional: Add later if needed
 });
 
 type TaskFormValues = z.infer<typeof taskFormSchema>;
@@ -67,7 +65,6 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
     resolver: zodResolver(taskFormSchema),
     defaultValues: {
       title: '',
-      // recurrence: 'one-time',
       description: '',
       priority: 'medium',
       time: '',
@@ -75,23 +72,22 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
   });
 
   const onSubmit = (data: TaskFormValues) => {
-    // Ensure date is included even if optional in schema but required logically
     const taskData = {
       ...data,
-      date: data.date || new Date(), // Default to today if no date picked
+      date: data.date || new Date(), 
     };
     onAddTask(taskData);
-    form.reset(); // Reset form fields
-    onClose(); // Close the dialog
+    form.reset(); 
+    onClose(); 
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
-          <DialogTitle>Add New Task</DialogTitle>
+          <DialogTitle>Adicionar Nova Tarefa</DialogTitle>
           <DialogDescription>
-            Fill in the details for your new task or reminder.
+            Preencha os detalhes para sua nova tarefa ou lembrete.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -101,9 +97,9 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                     name="title"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Task Title</FormLabel>
+                        <FormLabel>Título da Tarefa</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g., Buy groceries" {...field} />
+                            <Input placeholder="ex: Comprar mantimentos" {...field} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -116,7 +112,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                     name="date"
                     render={({ field }) => (
                         <FormItem className="flex flex-col">
-                        <FormLabel>Date</FormLabel>
+                        <FormLabel>Data</FormLabel>
                         <Popover>
                             <PopoverTrigger asChild>
                             <FormControl>
@@ -128,9 +124,9 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                                 )}
                                 >
                                 {field.value ? (
-                                    format(field.value, "PPP")
+                                    format(field.value, "PPP", { locale: ptBR })
                                 ) : (
-                                    <span>Pick a date</span>
+                                    <span>Escolha uma data</span>
                                 )}
                                 <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                 </Button>
@@ -141,8 +137,8 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                                 mode="single"
                                 selected={field.value}
                                 onSelect={field.onChange}
-                                // disabled={(date) => date < new Date(new Date().setHours(0,0,0,0)) } // Disable past dates
                                 initialFocus
+                                locale={ptBR}
                             />
                             </PopoverContent>
                         </Popover>
@@ -155,7 +151,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                         name="time"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Time (Optional)</FormLabel>
+                                <FormLabel>Hora (Opcional)</FormLabel>
                                 <FormControl>
                                      <div className="relative">
                                         <Input type="time" {...field} className="pr-8"/>
@@ -168,41 +164,14 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                     />
                 </div>
 
-                 {/* Recurrence - Simple Select for now */}
-                 {/*
-                 <FormField
-                    control={form.control}
-                    name="recurrence"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Recurrence</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select recurrence" />
-                            </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                            <SelectItem value="one-time">One-time</SelectItem>
-                            <SelectItem value="daily">Daily</SelectItem>
-                            <SelectItem value="weekly">Weekly</SelectItem>
-                             Add 'monthly', 'custom' later if needed
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                 */}
-
                 <FormField
                     control={form.control}
                     name="description"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Description / Notes (Optional)</FormLabel>
+                        <FormLabel>Descrição / Notas (Opcional)</FormLabel>
                         <FormControl>
-                            <Textarea placeholder="Add any extra details here..." {...field} />
+                            <Textarea placeholder="Adicione detalhes extras aqui..." {...field} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -214,17 +183,17 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                     name="priority"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Priority</FormLabel>
+                        <FormLabel>Prioridade</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                             <SelectTrigger>
-                                <SelectValue placeholder="Select priority" />
+                                <SelectValue placeholder="Selecione a prioridade" />
                             </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                            <SelectItem value="low">Low</SelectItem>
-                            <SelectItem value="medium">Medium</SelectItem>
-                            <SelectItem value="high">High</SelectItem>
+                            <SelectItem value="low">Baixa</SelectItem>
+                            <SelectItem value="medium">Média</SelectItem>
+                            <SelectItem value="high">Alta</SelectItem>
                             </SelectContent>
                         </Select>
                         <FormMessage />
@@ -232,12 +201,11 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                     )}
                  />
 
-
                 <DialogFooter>
                     <Button type="button" variant="outline" onClick={onClose}>
-                        Cancel
+                        Cancelar
                     </Button>
-                    <Button type="submit">Save Task</Button>
+                    <Button type="submit">Salvar Tarefa</Button>
                 </DialogFooter>
             </form>
          </Form>
@@ -245,4 +213,3 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
     </Dialog>
   );
 }
-

@@ -9,10 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: Home },
-  { href: '/suggestions', label: 'Suggestions', icon: Lightbulb },
-  { href: '/history', label: 'History', icon: BarChart },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/', label: 'Painel', icon: Home },
+  { href: '/suggestions', label: 'Sugestões', icon: Lightbulb },
+  { href: '/history', label: 'Histórico', icon: BarChart },
+  { href: '/settings', label: 'Ajustes', icon: Settings }, // Changed from Configurações to Ajustes for brevity
 ];
 
 export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
@@ -56,7 +56,7 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
         </div>
          {/* Placeholder for User Profile/Auth */}
          <div className="ml-auto">
-            {/* <Button variant="ghost" size="sm">Login</Button> */}
+            {/* <Button variant="ghost" size="sm">Entrar</Button> */}
             {/* Or Avatar/Dropdown if logged in */}
          </div>
     </nav>
