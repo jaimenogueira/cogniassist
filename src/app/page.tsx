@@ -56,19 +56,20 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (userName) {
+    if (userName && userName !== 'Utilizador') {
         const messages = [
-            `Bem-vindo(a), ${userName}! Vamos fazer o dia de hoje valer a pena 💪`,
-            `Olá, ${userName}! Pronto(a) para mais um dia de crescimento?`,
-            `${userName}, o seu foco começa agora. Vamos a isso!`,
-            `Que bom vê-lo(a), ${userName}! Hora de dar o seu melhor.`
+            `Bem-vindo(a), ${userName}!`,
+            `Força hoje, ${userName}!`,
+            `Vamos a isso, ${userName}!`,
+            `${userName}, foco total hoje!`,
+            `Hora de avançar, ${userName}!`,
+            `Conto consigo, ${userName}!`,
+            `Novo dia, ${userName}, mente fresca!`,
         ];
         const randomIndex = Math.floor(Math.random() * messages.length);
         setWelcomeMessage(messages[randomIndex]);
     } else {
-        // Fallback or loading state if userName is null (e.g., still loading)
-        // For now, uses the initial welcomeMessage state or a generic one if userName becomes null after being set
-         setWelcomeMessage('Bem-vindo(a) ao CogniAssist! Personalize as suas configurações para uma melhor experiência.');
+         setWelcomeMessage('Bem-vindo(a) ao CogniAssist! Personalize as suas configurações.');
     }
   }, [userName]);
 
@@ -109,7 +110,7 @@ export default function Home() {
     <div className="space-y-6">
       <header className="flex justify-between items-center">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center">
-           {userName ? <Brain className="mr-2 h-8 w-8 text-accent" /> : <User className="mr-2 h-8 w-8 text-accent" />}
+           {userName && userName !== 'Utilizador' ? <Brain className="mr-2 h-8 w-8 text-accent" /> : <User className="mr-2 h-8 w-8 text-accent" />}
            {welcomeMessage}
         </h1>
         <Button onClick={() => setIsAddTaskDialogOpen(true)} size="lg" className="shadow-md">
