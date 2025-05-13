@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Lightbulb, BarChart, Settings, Brain } from 'lucide-react';
+import { Home, Lightbulb, BarChart, Settings, Brain, Dumbbell } from 'lucide-react'; // Added Dumbbell
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -12,7 +12,8 @@ const navItems = [
   { href: '/', label: 'Painel', icon: Home },
   { href: '/suggestions', label: 'Sugestões', icon: Lightbulb },
   { href: '/history', label: 'Histórico', icon: BarChart },
-  { href: '/settings', label: 'Ajustes', icon: Settings }, // Changed from Configurações to Ajustes for brevity
+  { href: '/training', label: 'Treino', icon: Dumbbell }, // Added Training Tab
+  { href: '/settings', label: 'Ajustes', icon: Settings },
 ];
 
 export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
