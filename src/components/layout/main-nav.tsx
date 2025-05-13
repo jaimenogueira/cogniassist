@@ -11,7 +11,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 const navItems = [
   { href: '/', label: 'Painel', icon: Home },
   { href: '/suggestions', label: 'Sugestões', icon: Lightbulb },
-  { href: '/memory-focus', label: 'Memória e Foco', icon: Brain }, // Added Memory & Focus Tab
+  // { href: '/memory-focus', label: 'Memória e Foco', icon: Brain }, // Removed Memory & Focus Tab
   { href: '/history', label: 'Histórico', icon: BarChart },
   { href: '/training', label: 'Treino', icon: Dumbbell },
   { href: '/settings', label: 'Ajustes', icon: Settings },
@@ -65,4 +65,5 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
   );
 }
         
+
 
