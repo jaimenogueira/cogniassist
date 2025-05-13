@@ -96,7 +96,7 @@ export function AddWorkoutDialog({ isOpen, onClose, onSave, workout }: AddWorkou
         <DialogHeader>
           <DialogTitle>{workout ? 'Editar Treino' : 'Adicionar Novo Treino'}</DialogTitle>
           <DialogDescription>
-            Preencha os detalhes para seu treino.
+            Preencha os detalhes para o seu treino.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -108,7 +108,7 @@ export function AddWorkoutDialog({ isOpen, onClose, onSave, workout }: AddWorkou
                         <FormItem>
                         <FormLabel>Nome do Treino</FormLabel>
                         <FormControl>
-                            <Input placeholder="ex: Corrida Matinal, Treino de Perna" {...field} />
+                            <Input placeholder="ex: Corrida Matinal, Treino de Pernas" {...field} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -174,7 +174,7 @@ export function AddWorkoutDialog({ isOpen, onClose, onSave, workout }: AddWorkou
                     <Button type="button" variant="outline" onClick={onClose}>
                         Cancelar
                     </Button>
-                    <Button type="submit">{workout ? 'Salvar Alterações' : 'Adicionar Treino'}</Button>
+                    <Button type="submit">{workout ? 'Guardar Alterações' : 'Adicionar Treino'}</Button>
                 </DialogFooter>
             </form>
          </Form>
@@ -182,3 +182,4 @@ export function AddWorkoutDialog({ isOpen, onClose, onSave, workout }: AddWorkou
     </Dialog>
   );
 }
+

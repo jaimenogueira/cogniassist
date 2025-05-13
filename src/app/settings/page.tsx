@@ -67,7 +67,7 @@ export default function SettingsPage() {
             if (!fullName.trim() || !age.trim() || !cognitiveGoal.trim()) {
                 toast({
                   title: "Campos Obrigatórios",
-                  description: "Por favor, preencha Nome Completo, Idade e Objetivo Cognitivo.",
+                  description: "Por favor, preencha Nome Completo, Idade e Objectivo Cognitivo.",
                   variant: "destructive",
                 });
                 return false;
@@ -93,13 +93,13 @@ export default function SettingsPage() {
         if (isContinuingFromEssential) {
              setEssentialInfoSaved(true);
              toast({
-                title: "Informações Essenciais Salvas",
-                description: "Agora você pode configurar o restante das suas preferências.",
+                title: "Informações Essenciais Guardadas",
+                description: "Agora pode configurar o restante das suas preferências.",
              });
         } else {
             toast({
-              title: "Configurações Salvas",
-              description: "Suas preferências foram atualizadas.",
+              title: "Configurações Guardadas",
+              description: "As suas preferências foram atualizadas.",
             });
         }
         return true;
@@ -131,7 +131,7 @@ export default function SettingsPage() {
                 setCognitiveAssistSettings(initialCognitiveAssistSettings);
             }
           } catch (error) {
-            console.error("Falha ao analisar configurações salvas:", error);
+            console.error("Falha ao analisar configurações guardadas:", error);
             setEssentialInfoSaved(false); // Fallback if parsing fails
           }
         }
@@ -153,24 +153,24 @@ export default function SettingsPage() {
       <Card className="shadow-lg border-accent border-2">
         <CardHeader>
           <CardTitle className="flex items-center text-xl"><ClipboardList className="mr-2 h-6 w-6 text-accent" /> Informações Essenciais</CardTitle>
-          <CardDescription>Estes dados são usados para personalizar sua experiência no CogniAssist. Por favor, preencha para continuar.</CardDescription>
+          <CardDescription>Estes dados são usados para personalizar a sua experiência no CogniAssist. Por favor, preencha para continuar.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
             <div>
                 <Label htmlFor="fullName">Nome Completo <span className="text-destructive">*</span></Label>
-                <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Seu nome completo" className="mt-1" />
-                <p className="text-xs text-muted-foreground mt-1">Como devemos te chamar?</p>
+                <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="O seu nome completo" className="mt-1" />
+                <p className="text-xs text-muted-foreground mt-1">Como devemos chamá-lo(a)?</p>
             </div>
             <div>
                 <Label htmlFor="age">Idade <span className="text-destructive">*</span></Label>
-                <Input id="age" type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="Sua idade" className="mt-1" />
-                 <p className="text-xs text-muted-foreground mt-1">Sua idade nos ajuda a adaptar sugestões.</p>
+                <Input id="age" type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="A sua idade" className="mt-1" />
+                 <p className="text-xs text-muted-foreground mt-1">A sua idade ajuda-nos a adaptar sugestões.</p>
             </div>
             <div>
-                <Label htmlFor="gender">Gênero</Label>
+                <Label htmlFor="gender">Género</Label>
                 <Select value={gender} onValueChange={setGender}>
                     <SelectTrigger id="gender" className="w-full mt-1">
-                        <SelectValue placeholder="Selecione seu gênero (opcional)" />
+                        <SelectValue placeholder="Selecione o seu género (opcional)" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="male">Masculino</SelectItem>
@@ -182,18 +182,18 @@ export default function SettingsPage() {
                  <p className="text-xs text-muted-foreground mt-1">Esta informação é opcional.</p>
             </div>
             <div>
-                <Label htmlFor="cognitiveGoal">Qual seu principal objetivo cognitivo? <span className="text-destructive">*</span></Label>
+                <Label htmlFor="cognitiveGoal">Qual o seu principal objectivo cognitivo? <span className="text-destructive">*</span></Label>
                 <Textarea 
                     id="cognitiveGoal" 
                     value={cognitiveGoal} 
                     onChange={(e) => setCognitiveGoal(e.target.value)} 
-                    placeholder="ex: Melhorar foco, memória, atenção, organização, controle de ansiedade..." 
+                    placeholder="ex: Melhorar foco, memória, atenção, organização, controlo de ansiedade..." 
                     className="mt-1"
                 />
-                <p className="text-xs text-muted-foreground mt-1">Seu objetivo principal guia nossas sugestões de IA.</p>
+                <p className="text-xs text-muted-foreground mt-1">O seu objectivo principal guia as nossas sugestões de IA.</p>
             </div>
              <Button onClick={handleSaveEssentialAndContinue} size="lg" className="w-full mt-2">
-                Salvar Informações Essenciais e Continuar
+                Guardar Informações Essenciais e Continuar
              </Button>
         </CardContent>
       </Card>
@@ -216,13 +216,13 @@ export default function SettingsPage() {
 
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="senior" id="mode-senior" />
-              <Label htmlFor="mode-senior">Modo Sênior</Label>
+              <Label htmlFor="mode-senior">Modo Sénior</Label>
             </div>
              <p className="text-sm text-muted-foreground pl-6">Texto maior, layout mais simples, alertas visuais mais fortes.</p>
 
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="adhd" id="mode-adhd" />
-              <Label htmlFor="mode-adhd">Modo TDAH</Label>
+              <Label htmlFor="mode-adhd">Modo PHDA</Label>
             </div>
              <p className="text-sm text-muted-foreground pl-6">Blocos de tarefas visuais, alertas frequentes, distrações minimizadas.</p>
             
@@ -230,7 +230,7 @@ export default function SettingsPage() {
               <RadioGroupItem value="assist" id="mode-assist" />
               <Label htmlFor="mode-assist">Modo Assistência Cognitiva</Label>
             </div>
-             <p className="text-sm text-muted-foreground pl-6">Suporte aprimorado para déficits de memória, Alzheimer ou lesão cerebral. Inclui orientação passo a passo, lembretes repetitivos e integração opcional com cuidador.</p>
+             <p className="text-sm text-muted-foreground pl-6">Suporte aprimorado para défices de memória, Alzheimer ou lesão cerebral. Inclui orientação passo a passo, lembretes repetitivos e integração opcional com o cuidador.</p>
           </RadioGroup>
         </CardContent>
       </Card>
@@ -253,7 +253,7 @@ export default function SettingsPage() {
                         />
                         <Label htmlFor="step-by-step-tasks" className="flex items-center gap-2"><ListChecks className="h-4 w-4"/> Orientação de Tarefas Passo a Passo</Label>
                     </div>
-                    <p className="text-xs text-muted-foreground pl-8">Divide tarefas em etapas menores e gerenciáveis com auxílios visuais.</p>
+                    <p className="text-xs text-muted-foreground pl-8">Divide tarefas em etapas menores e gerenciáveis com ajudas visuais.</p>
                 </div>
 
                 <div className="space-y-2">
@@ -265,7 +265,7 @@ export default function SettingsPage() {
                         />
                         <Label htmlFor="audio-feedback" className="flex items-center gap-2"><Volume2 className="h-4 w-4"/> Confirmação e Feedback por Áudio</Label>
                     </div>
-                     <p className="text-xs text-muted-foreground pl-8">Fornece dicas de voz para ações e lembretes.</p>
+                     <p className="text-xs text-muted-foreground pl-8">Fornece indicações de voz para ações e lembretes.</p>
                 </div>
                  <div className="space-y-2">
                     <div className="flex items-center space-x-2">
@@ -276,7 +276,7 @@ export default function SettingsPage() {
                         />
                         <Label htmlFor="simplified-navigation" className="flex items-center gap-2"><Navigation className="h-4 w-4"/> Navegação Simplificada</Label>
                     </div>
-                     <p className="text-xs text-muted-foreground pl-8">Reduz a complexidade em menus e interface.</p>
+                     <p className="text-xs text-muted-foreground pl-8">Reduz a complexidade nos menus e na interface.</p>
                 </div>
 
                 <Separator />
@@ -288,12 +288,12 @@ export default function SettingsPage() {
                             checked={cognitiveAssistSettings.caregiverIntegrationEnabled}
                             onCheckedChange={(checked) => setCognitiveAssistSettings(prev => ({ ...prev, caregiverIntegrationEnabled: Boolean(checked) }))}
                         />
-                        <Label htmlFor="caregiver-integration" className="flex items-center gap-2"><Users className="h-4 w-4"/> Integração com Cuidador</Label>
+                        <Label htmlFor="caregiver-integration" className="flex items-center gap-2"><Users className="h-4 w-4"/> Integração com o Cuidador</Label>
                     </div>
-                     <p className="text-xs text-muted-foreground pl-8">Permite que um cuidador designado receba notificações e ajude no gerenciamento.</p>
+                     <p className="text-xs text-muted-foreground pl-8">Permite que um cuidador designado receba notificações e ajude na gestão.</p>
                     {cognitiveAssistSettings.caregiverIntegrationEnabled && (
                          <div className="pl-8 pt-2">
-                            <Label htmlFor="caregiver-contact">Contato do Cuidador (Email ou Telefone)</Label>
+                            <Label htmlFor="caregiver-contact">Contacto do Cuidador (Email ou Telefone)</Label>
                             <Input
                                 id="caregiver-contact"
                                 type="text"
@@ -329,7 +329,7 @@ export default function SettingsPage() {
       <Card className="shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center"><Bell className="mr-2 h-5 w-5 text-accent" /> Ajustes de Notificação</CardTitle>
-          <CardDescription>Controle como e quando você recebe lembretes de tarefas.</CardDescription>
+          <CardDescription>Controle como e quando recebe lembretes de tarefas.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -345,7 +345,7 @@ export default function SettingsPage() {
                  {cognitiveMode === 'assist' && <SelectItem value="persistent">Persistente (Assist. Cognitiva)</SelectItem>}
               </SelectContent>
             </Select>
-            {cognitiveMode === 'assist' && <p className="text-xs text-muted-foreground mt-1">Lembretes persistentes exigem interação do usuário para dispensar.</p>}
+            {cognitiveMode === 'assist' && <p className="text-xs text-muted-foreground mt-1">Lembretes persistentes exigem interação do utilizador para dispensar.</p>}
           </div>
 
           <div>
@@ -373,7 +373,7 @@ export default function SettingsPage() {
                         checked={notificationType.vibration}
                         onCheckedChange={(checked) => setNotificationType(prev => ({ ...prev, vibration: Boolean(checked) }))}
                     />
-                    <Label htmlFor="notif-vibration" className="flex items-center gap-2"><Bell className="h-4 w-4"/> Vibração (Celular)</Label>
+                    <Label htmlFor="notif-vibration" className="flex items-center gap-2"><Bell className="h-4 w-4"/> Vibração (Telemóvel)</Label>
                 </div>
              </div>
           </div>
@@ -385,7 +385,7 @@ export default function SettingsPage() {
        <Card className="shadow-sm">
          <CardHeader>
            <CardTitle className="flex items-center"><Palette className="mr-2 h-5 w-5 text-purple-500" /> Aparência</CardTitle>
-           <CardDescription>Personalize a aparência do aplicativo.</CardDescription>
+           <CardDescription>Personalize a aparência da aplicação.</CardDescription>
          </CardHeader>
          <CardContent className="space-y-4">
             {useTheme && setTheme && ( 
@@ -421,7 +421,7 @@ export default function SettingsPage() {
        </Card>
 
         <div className="flex justify-end pt-4">
-            <Button onClick={() => handleSaveChanges(false)} size="lg">Salvar Todas as Alterações</Button>
+            <Button onClick={() => handleSaveChanges(false)} size="lg">Guardar Todas as Alterações</Button>
         </div>
     </>
     )}

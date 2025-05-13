@@ -14,7 +14,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'CogniAssist', // Kept as product name
-  description: 'Seu assistente inteligente para gerenciar tarefas e impulsionar a memória.',
+  description: 'O seu assistente inteligente para gerir tarefas e impulsionar a memória.',
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-PT" suppressHydrationWarning>
       <body
         className={cn(
           'min-h-screen bg-secondary font-sans antialiased', // Use secondary color for body background
@@ -46,3 +46,4 @@ export default function RootLayout({
     </html>
   );
 }
+

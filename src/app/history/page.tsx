@@ -61,7 +61,7 @@ export default function HistoryPage() {
 
     const [mostProductiveDay, setMostProductiveDay] = useState("Quartas-feiras");
     const [bestFocusTime, setBestFocusTime] = useState("9h - 12h");
-    const [aiInsight, setAiInsight] = useState("Você tende a se concentrar melhor antes do almoço, especialmente em tarefas complexas.");
+    const [aiInsight, setAiInsight] = useState("Tende a concentrar-se melhor antes do almoço, especialmente em tarefas complexas.");
 
 
     useEffect(() => {
@@ -73,11 +73,11 @@ export default function HistoryPage() {
         if (selectedMonth === 'lastMonth') {
             setMostProductiveDay("Terças-feiras (Mês Passado)");
             setBestFocusTime("10h - 13h (Mês Passado)");
-            setAiInsight("No mês passado, seu foco à tarde foi ligeiramente maior.");
+            setAiInsight("No mês passado, o seu foco à tarde foi ligeiramente maior.");
         } else {
             setMostProductiveDay("Quartas-feiras");
             setBestFocusTime("9h - 12h");
-            setAiInsight("Você tende a se concentrar melhor antes do almoço, especialmente em tarefas complexas.");
+            setAiInsight("Tende a concentrar-se melhor antes do almoço, especialmente em tarefas complexas.");
         }
 
     }, [selectedMonth]);
@@ -98,7 +98,7 @@ export default function HistoryPage() {
          </Button>
       </header>
         <p className="text-muted-foreground">
-            Revise seu histórico de conclusão de tarefas e tendências de produtividade ao longo do tempo.
+            Reveja o seu histórico de conclusão de tarefas e tendências de produtividade ao longo do tempo.
         </p>
 
       <Card className="shadow-sm hover:shadow-md transition-shadow">
@@ -143,7 +143,7 @@ export default function HistoryPage() {
             <div className="flex w-full justify-between items-start">
                 <div>
                     <CardTitle className="flex items-center"><TrendingUp className="mr-2 h-5 w-5 text-blue-500" /> Tendências de Produtividade (Mensal)</CardTitle>
-                    <CardDescription>Visualizando seu foco, eficiência e taxas de conclusão.</CardDescription>
+                    <CardDescription>Visualizando o seu foco, eficiência e taxas de conclusão.</CardDescription>
                 </div>
                 <Select value={selectedMonth} onValueChange={setSelectedMonth}>
                     <SelectTrigger className="w-[180px]">
@@ -228,13 +228,13 @@ export default function HistoryPage() {
       <Card className="shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
           <CardTitle className="flex items-center"><Award className="mr-2 h-5 w-5 text-yellow-500" /> Conquistas e Recompensas</CardTitle>
-          <CardDescription>Ganhe emblemas por sua consistência e progresso!</CardDescription>
+          <CardDescription>Ganhe emblemas pela sua consistência e progresso!</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4 items-center justify-center">
           <div className="text-center p-3 border rounded-lg bg-secondary w-24">
             <Award className="h-8 w-8 text-yellow-500 mx-auto mb-1" />
             <p className="text-xs font-medium">Início de Sequência</p>
-            <p className="text-xs text-muted-foreground">Complete tarefas 3 dias seguidos</p>
+            <p className="text-xs text-muted-foreground">Complete tarefas durante 3 dias seguidos</p>
           </div>
            <div className="text-center p-3 border rounded-lg bg-secondary w-24 opacity-50">
             <Award className="h-8 w-8 text-gray-400 mx-auto mb-1" />
@@ -252,10 +252,11 @@ export default function HistoryPage() {
 
        <Card className="shadow-sm bg-gradient-to-r from-primary/20 to-accent/20 border-0">
            <CardContent className="p-4">
-               <p className="text-center text-sm italic text-foreground/80">"A chave não é priorizar o que está na sua agenda, mas agendar suas prioridades." – Stephen Covey</p>
+               <p className="text-center text-sm italic text-foreground/80">"A chave não é priorizar o que está na sua agenda, mas agendar as suas prioridades." – Stephen Covey</p>
            </CardContent>
        </Card>
 
     </div>
   );
 }
+

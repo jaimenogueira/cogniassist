@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { format, startOfWeek, addDays, isToday } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { pt } from 'date-fns/locale'; // Changed to pt
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarDays } from 'lucide-react';
@@ -24,10 +24,10 @@ interface Appointment {
 }
 
 const MOCK_APPOINTMENTS_SOURCE: Record<string, Omit<Appointment, 'id'>[]> = {
-  'default-0': [{ title: 'Sincronização da Equipe', color: 'bg-blue-500' }], 
+  'default-0': [{ title: 'Sincronização da Equipa', color: 'bg-blue-500' }], // Equipa
   'default-2': [ 
     { title: 'Projeto Alfa', color: 'bg-green-500' },
-    { title: 'Revisar Documentos', color: 'bg-yellow-500' },
+    { title: 'Rever Documentos', color: 'bg-yellow-500' }, // Rever
   ],
   'default-4': [{ title: 'Chamada com Cliente', color: 'bg-purple-500' }], 
 };
@@ -42,7 +42,7 @@ export function MiniCalendarView() {
     const today = new Date();
     // setCurrentDate(today); // Not strictly needed if only used for initial calculation
 
-    const startOfCurrentWeek = startOfWeek(today, { weekStartsOn: 1, locale: ptBR }); 
+    const startOfCurrentWeek = startOfWeek(today, { weekStartsOn: 1, locale: pt }); 
 
     const days: Day[] = [];
     const localMockAppointments: Record<string, Appointment[]> = {};
@@ -61,8 +61,8 @@ export function MiniCalendarView() {
 
       days.push({
         date,
-        dayName: format(date, 'E', { locale: ptBR }), 
-        dayNumber: format(date, 'd', { locale: ptBR }),
+        dayName: format(date, 'E', { locale: pt }), 
+        dayNumber: format(date, 'd', { locale: pt }),
         isCurrentMonth: true, 
         isCurrentDay: isToday(date),
         appointments: localMockAppointments[dateString] || [],
@@ -81,7 +81,7 @@ export function MiniCalendarView() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground text-sm">Carregando visão semanal...</p>
+          <p className="text-muted-foreground text-sm">A carregar visão semanal...</p>
         </CardContent>
       </Card>
     );
@@ -133,9 +133,10 @@ export function MiniCalendarView() {
           ))}
         </div>
         <p className="text-xs text-muted-foreground text-center mt-2">
-          Semana atual: {weekDays[0] ? format(weekDays[0].date, 'd MMM', { locale: ptBR }) : ''} - {weekDays[6] ? format(weekDays[6].date, 'd MMM, yyyy', { locale: ptBR }) : ''}
+          Semana actual: {weekDays[0] ? format(weekDays[0].date, 'd MMM', { locale: pt }) : ''} - {weekDays[6] ? format(weekDays[6].date, 'd MMM, yyyy', { locale: pt }) : ''}
         </p>
       </CardContent>
     </Card>
   );
 }
+

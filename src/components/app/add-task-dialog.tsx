@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { pt } from 'date-fns/locale'; // Changed to pt
 import { CalendarIcon, Clock } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -87,7 +87,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
         <DialogHeader>
           <DialogTitle>Adicionar Nova Tarefa</DialogTitle>
           <DialogDescription>
-            Preencha os detalhes para sua nova tarefa ou lembrete.
+            Preencha os detalhes para a sua nova tarefa ou lembrete.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -124,7 +124,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                                 )}
                                 >
                                 {field.value ? (
-                                    format(field.value, "PPP", { locale: ptBR })
+                                    format(field.value, "PPP", { locale: pt })
                                 ) : (
                                     <span>Escolha uma data</span>
                                 )}
@@ -138,7 +138,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                                 selected={field.value}
                                 onSelect={field.onChange}
                                 initialFocus
-                                locale={ptBR}
+                                locale={pt}
                             />
                             </PopoverContent>
                         </Popover>
@@ -205,7 +205,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                     <Button type="button" variant="outline" onClick={onClose}>
                         Cancelar
                     </Button>
-                    <Button type="submit">Salvar Tarefa</Button>
+                    <Button type="submit">Guardar Tarefa</Button>
                 </DialogFooter>
             </form>
          </Form>
@@ -213,3 +213,4 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
     </Dialog>
   );
 }
+

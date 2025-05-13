@@ -15,24 +15,24 @@ import {z} from 'genkit';
 const GenerateMemoryTipsInputSchema = z.object({
   cognitiveProfile: z
     .string()
-    .describe('O perfil cognitivo do usuário, ex: Modo Sênior, Modo TDAH.'),
+    .describe('O perfil cognitivo do utilizador, ex: Modo Sénior, Modo PHDA.'), // PHDA for ADHD
   pastBehavior: z
     .string()
-    .describe('O comportamento passado do usuário relacionado à conclusão de tarefas e foco.'),
+    .describe('O comportamento passado do utilizador relacionado com a conclusão de tarefas e foco.'),
 });
 export type GenerateMemoryTipsInput = z.infer<typeof GenerateMemoryTipsInputSchema>;
 
 const GenerateMemoryTipsOutputSchema = z.object({
   memoryTips: z
     .array(z.string())
-    .describe('Uma lista de dicas de memória personalizadas para o usuário.'),
+    .describe('Uma lista de dicas de memória personalizadas para o utilizador.'),
 });
 export type GenerateMemoryTipsOutput = z.infer<typeof GenerateMemoryTipsOutputSchema>;
 
 const defaultMemoryTips: GenerateMemoryTipsOutput = {
     memoryTips: [
-        "Divida as rotinas em seções menores e gerenciáveis.",
-        "Associe novas informações a coisas que você já conhece.",
+        "Divida as rotinas em secções menores e gerenciáveis.", // secções
+        "Associe novas informações a coisas que já conhece.",
         "Pratique a atenção plena (mindfulness) para melhorar o foco e a codificação da memória."
     ]
 };
@@ -57,7 +57,7 @@ const prompt = ai.definePrompt({
     schema: z.object({
       memoryTips: z
         .array(z.string())
-        .describe('Uma lista de dicas de memória personalizadas para o usuário.'), // Output description in Portuguese
+        .describe('Uma lista de dicas de memória personalizadas para o utilizador.'), // Output description in European Portuguese
     }),
   },
   prompt: `You are an AI assistant designed to provide personalized memory tips based on user cognitive profile and past behavior.
@@ -65,7 +65,7 @@ const prompt = ai.definePrompt({
   Cognitive Profile: {{{cognitiveProfile}}}
   Past Behavior: {{{pastBehavior}}}
 
-  Generate 3 memory tips tailored to the user. Return the tips as a numbered list. If the user's preferred language is Portuguese, provide the tips in Portuguese.
+  Generate 3 memory tips tailored to the user. Return the tips as a numbered list. If the user's preferred language is European Portuguese, provide the tips in European Portuguese.
   `,
 });
 
@@ -90,3 +90,4 @@ async (input: GenerateMemoryTipsInput) => {
     return defaultMemoryTips;
   }
 });
+

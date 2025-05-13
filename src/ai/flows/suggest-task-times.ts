@@ -24,16 +24,16 @@ const SuggestTaskTimesInputSchema = z.object({
   focusHistory: z
     .string()
     .describe(
-      'Uma string contendo o histórico de foco do usuário, detalhando momentos de alta e baixa concentração.'
+      'Uma string contendo o histórico de foco do utilizador, detalhando momentos de alta e baixa concentração.'
     ),
   pastTaskCompletionTimes: z
     .string()
-    .describe('Uma string contendo os horários de conclusão de tarefas passadas do usuário.'),
+    .describe('Uma string contendo os horários de conclusão de tarefas passadas do utilizador.'),
   adaptAutomatically: z
     .boolean()
     .optional()
     .describe(
-      'Se verdadeiro, as sugestões serão personalizadas com base no comportamento do usuário. Se falso ou indefinido, serão fornecidas sugestões gerais de ritmo circadiano.'
+      'Se verdadeiro, as sugestões serão personalizadas com base no comportamento do utilizador. Se falso ou indefinido, serão fornecidas sugestões gerais de ritmo circadiano.'
     ),
 });
 export type SuggestTaskTimesInput = z.infer<typeof SuggestTaskTimesInputSchema>;
@@ -42,7 +42,7 @@ const SuggestTaskTimesOutputSchema = z.object({
   timeBlocks: z
     .array(TimeBlockSchema)
     .describe('Uma lista de blocos de tempo sugeridos, cada um com título, intervalo de tempo e descrição.'),
-  reasoning: z.string().describe('A justificativa da IA para os horários sugeridos.'),
+  reasoning: z.string().describe('A justificação da IA para os horários sugeridos.'),
 });
 export type SuggestTaskTimesOutput = z.infer<typeof SuggestTaskTimesOutputSchema>;
 
@@ -51,7 +51,7 @@ const defaultTimeBlocks: TimeBlock[] = [
     title: 'Foco Matinal',
     timeRange: '8h – 11h',
     description:
-      'Ideal para trabalho focado e tarefas que exigem alta concentração e engajamento cognitivo.',
+      'Ideal para trabalho focado e tarefas que exigem alta concentração e empenho cognitivo.', // empenho
   },
   {
     title: 'Ritmo do Meio-dia',
@@ -62,7 +62,7 @@ const defaultTimeBlocks: TimeBlock[] = [
   {
     title: 'Criatividade Noturna',
     timeRange: '18h – 21h',
-    description: 'Uma ótima janela para pensamento criativo, brainstorming ou tarefas reflexivas.',
+    description: 'Uma excelente janela para pensamento criativo, brainstorming ou tarefas reflexivas.', // excelente
   },
 ];
 
@@ -74,11 +74,11 @@ const prompt = ai.definePrompt({
   name: 'suggestTaskTimesPrompt',
   input: { schema: SuggestTaskTimesInputSchema },
   output: { schema: SuggestTaskTimesOutputSchema },
-  prompt: `You are an AI assistant that suggests ideal task times. Your output should be in Portuguese if the user's context implies it.
+  prompt: `You are an AI assistant that suggests ideal task times. Your output should be in European Portuguese if the user's context implies it.
 
 Based on the user's task type, focus history, past task completion times, and adaptation preference, provide three primary time blocks for productivity: "Foco Matinal", "Ritmo do Meio-dia", and "Criatividade Noturna".
 
-Default Time Blocks (use these as a base if 'adaptAutomatically' is false or user history is insufficient, in Portuguese):
+Default Time Blocks (use these as a base if 'adaptAutomatically' is false or user history is insufficient, in European Portuguese):
 - Foco Matinal (ex: 8h – 11h): Ideal para trabalho focado e tarefas que exigem alta concentração.
 - Ritmo do Meio-dia (ex: 12h – 15h): Adequado para reuniões, comunicação e trabalho colaborativo.
 - Criatividade Noturna (ex: 18h – 21h): Bom para pensamento criativo, brainstorming ou tarefas reflexivas.
@@ -93,7 +93,7 @@ If 'Adapt Automatically' is 'Yes' and user history is available, tailor the time
 If 'Adapt Automatically' is 'No', or if user history is insufficient for meaningful adaptation, provide the general descriptions and typical time ranges for "Foco Matinal", "Ritmo do Meio-dia", and "Criatividade Noturna".
 
 The output must contain exactly three time blocks in the 'timeBlocks' array, with the specified titles in Portuguese.
-Also, provide an overall 'reasoning' string in Portuguese explaining your suggestions, especially if adaptations were made or why general suggestions were provided.
+Also, provide an overall 'reasoning' string in European Portuguese explaining your suggestions, especially if adaptations were made or why general suggestions were provided.
 `,
 });
 
@@ -125,7 +125,8 @@ const suggestTaskTimesFlow = ai.defineFlow<
     return {
       timeBlocks: defaultTimeBlocks,
       reasoning:
-        'Usando padrões gerais de produtividade. Ative "Adaptar Automaticamente" e use mais o aplicativo para sugestões personalizadas.',
+        'A utilizar padrões gerais de produtividade. Ative "Adaptar Automaticamente" e use mais a aplicação para sugestões personalizadas.', // A utilizar, aplicação
     };
   }
 );
+

@@ -17,12 +17,12 @@ const RecommendBreaksInputSchema = z.object({
   taskHistory: z
     .string()
     .describe(
-      'Uma string contendo o histórico de tarefas do usuário, incluindo títulos, durações, status de conclusão e quaisquer notas associadas.'
+      'Uma string contendo o histórico de tarefas do utilizador, incluindo títulos, durações, status de conclusão e quaisquer notas associadas.'
     ),
   focusPatterns: z
     .string()
     .describe(
-      'Uma string contendo os padrões de foco do usuário, incluindo horários de pico de foco, períodos de baixo foco e quaisquer distrações identificadas.'
+      'Uma string contendo os padrões de foco do utilizador, incluindo horários de pico de foco, períodos de baixo foco e quaisquer distrações identificadas.'
     ),
 });
 export type RecommendBreaksInput = z.infer<typeof RecommendBreaksInputSchema>;
@@ -31,7 +31,7 @@ const RecommendBreaksOutputSchema = z.object({
   breakRecommendation: z
     .string()
     .describe(
-      'Uma recomendação para uma pausa estratégica, incluindo o tipo de pausa (ex: Pomodoro, micropausa), a duração e atividades sugeridas.'
+      'Uma recomendação para uma pausa estratégica, incluindo o tipo de pausa (ex: Pomodoro, micropausa), a duração e actividades sugeridas.' // actividades
     ),
   productivityTechnique: z
     .string()
@@ -41,7 +41,7 @@ const RecommendBreaksOutputSchema = z.object({
   reasoning: z
     .string()
     .describe(
-      'Uma breve explicação do motivo pelo qual a recomendação de pausa e a técnica de produtividade foram escolhidas, com base no histórico de tarefas e padrões de foco do usuário.'
+      'Uma breve explicação do motivo pelo qual a recomendação de pausa e a técnica de produtividade foram escolhidas, com base no histórico de tarefas e padrões de foco do utilizador.'
     ),
 });
 export type RecommendBreaksOutput = z.infer<typeof RecommendBreaksOutputSchema>;
@@ -77,21 +77,21 @@ const prompt = ai.definePrompt({
       breakRecommendation: z
         .string()
         .describe(
-          'Uma recomendação para uma pausa estratégica, incluindo o tipo de pausa (ex: Pomodoro, micropausa), a duração e atividades sugeridas.' // Output description in Portuguese
+          'Uma recomendação para uma pausa estratégica, incluindo o tipo de pausa (ex: Pomodoro, micropausa), a duração e actividades sugeridas.' // Output description in European Portuguese
         ),
       productivityTechnique: z
         .string()
         .describe(
-          'Uma técnica de produtividade recomendada, como blocos de tempo, a Matriz de Eisenhower ou o método Getting Things Done (GTD).' // Output description in Portuguese
+          'Uma técnica de produtividade recomendada, como blocos de tempo, a Matriz de Eisenhower ou o método Getting Things Done (GTD).' // Output description in European Portuguese
         ),
       reasoning: z
         .string()
         .describe(
-          'Uma breve explicação do motivo pelo qual a recomendação de pausa e a técnica de produtividade foram escolhidas, com base no histórico de tarefas e padrões de foco do usuário.' // Output description in Portuguese
+          'Uma breve explicação do motivo pelo qual a recomendação de pausa e a técnica de produtividade foram escolhidas, com base no histórico de tarefas e padrões de foco do utilizador.' // Output description in European Portuguese
         ),
     }),
   },
-  prompt: `Based on the user's task history and focus patterns, provide a strategic break recommendation and a productivity technique. Your output should be in Portuguese if the user's context implies it.
+  prompt: `Based on the user's task history and focus patterns, provide a strategic break recommendation and a productivity technique. Your output should be in European Portuguese if the user's context implies it.
 
 Task History: {{{taskHistory}}}
 
@@ -130,3 +130,4 @@ const recommendBreaksFlow = ai.defineFlow<
     }
   }
 );
+

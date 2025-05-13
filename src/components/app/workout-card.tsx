@@ -33,7 +33,7 @@ export function WorkoutCard({ workout, onStatusChange, onEdit, onDelete, sportIc
      if (completed === true) { // Checked "Concluído"
       onStatusChange(workout.id, 'concluido');
     } else { // Unchecked "Concluído"
-      onStatusChange(workout.id, 'compareceu');
+      onStatusChange(workout.id, 'compareceu'); // Revert to 'compareceu' if 'concluido' is unchecked
     }
   };
   
@@ -112,3 +112,4 @@ export function WorkoutCard({ workout, onStatusChange, onEdit, onDelete, sportIc
     </Card>
   );
 }
+

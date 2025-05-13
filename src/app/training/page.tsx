@@ -150,9 +150,9 @@ export default function TrainingPage() {
     setTotalPoints(prev => prev + pointsChange);
 
     if (pointsChange > 0) {
-        toast({ title: "Progresso Registrado!", description: `Você ganhou ${pointsChange} pontos.` });
+        toast({ title: "Progresso Registado!", description: `Ganhou ${pointsChange} pontos.` });
     } else if (pointsChange < 0) {
-        toast({ title: "Progresso Atualizado", description: `Seu total de pontos foi ajustado em ${pointsChange}.` });
+        toast({ title: "Progresso Atualizado", description: `O seu total de pontos foi ajustado em ${pointsChange}.` });
     }
   };
 
@@ -171,28 +171,28 @@ export default function TrainingPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap justify-between items-center gap-4">
         <h1 className="text-3xl font-bold text-foreground flex items-center">
-          <Dumbbell className="mr-2 h-8 w-8 text-primary" /> Monitor de Treinamento Físico
+          <Dumbbell className="mr-2 h-8 w-8 text-primary" /> Monitor de Treino Físico
         </h1>
         <Button onClick={() => { setEditingWorkout(null); setIsAddWorkoutDialogOpen(true); }} size="lg" className="shadow-md">
           <PlusCircle className="mr-2 h-5 w-5" /> Adicionar Treino
         </Button>
       </header>
       <p className="text-muted-foreground">
-        Registre seus esportes, planeje sua rotina semanal e acompanhe seu progresso.
+        Registe os seus desportos, planeie a sua rotina semanal e acompanhe o seu progresso.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="md:col-span-1 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
-            <CardTitle className="flex items-center"><SportIcon className="mr-2 h-5 w-5 text-accent" /> Meu Perfil de Treino</CardTitle>
-            <CardDescription>Seu esporte e progresso.</CardDescription>
+            <CardTitle className="flex items-center"><SportIcon className="mr-2 h-5 w-5 text-accent" /> O Meu Perfil de Treino</CardTitle>
+            <CardDescription>O seu desporto e progresso.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label htmlFor="preferred-sport" className="text-sm font-medium text-foreground block mb-1">Esporte Preferido</label>
+              <label htmlFor="preferred-sport" className="text-sm font-medium text-foreground block mb-1">Desporto Preferido</label>
               <Select value={preferredSport} onValueChange={setPreferredSport}>
                 <SelectTrigger id="preferred-sport">
-                  <SelectValue placeholder="Selecione seu esporte" />
+                  <SelectValue placeholder="Selecione o seu desporto" />
                 </SelectTrigger>
                 <SelectContent>
                   {initialSports.map(sport => (
@@ -219,7 +219,7 @@ export default function TrainingPage() {
             </div>
           </CardContent>
            <CardFooter>
-             <p className="text-xs text-muted-foreground italic">Marque seus treinos para ganhar pontos!</p>
+             <p className="text-xs text-muted-foreground italic">Marque os seus treinos para ganhar pontos!</p>
            </CardFooter>
         </Card>
 
@@ -227,7 +227,7 @@ export default function TrainingPage() {
           <Card className="shadow-sm hover:shadow-md transition-shadow">
             <CardHeader>
               <CardTitle className="flex items-center">Rotina de Treino Semanal</CardTitle>
-              <CardDescription>Seus treinos planejados para a semana.</CardDescription>
+              <CardDescription>Os seus treinos planeados para a semana.</CardDescription>
             </CardHeader>
             <CardContent>
               {weeklyRoutine.length === 0 ? (
@@ -261,13 +261,13 @@ export default function TrainingPage() {
       <Card className="shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
           <CardTitle className="flex items-center"><Trophy className="mr-2 h-5 w-5 text-yellow-400" /> Conquistas e Metas</CardTitle>
-          <CardDescription>Seu mural de conquistas (em breve!).</CardDescription>
+          <CardDescription>O seu mural de conquistas (em breve!).</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4 items-center justify-center">
            <div className="text-center p-3 border rounded-lg bg-muted/50 w-32 opacity-50">
                 <Trophy className="h-8 w-8 text-gray-400 mx-auto mb-1" />
                 <p className="text-xs font-medium">Primeiro Treino!</p>
-                <p className="text-xs text-muted-foreground">Complete seu 1º treino</p>
+                <p className="text-xs text-muted-foreground">Complete o seu 1º treino</p>
            </div>
             <div className="text-center p-3 border rounded-lg bg-muted/50 w-32 opacity-50">
                 <Trophy className="h-8 w-8 text-gray-400 mx-auto mb-1" />

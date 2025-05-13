@@ -14,7 +14,7 @@ interface MemoryTip {
 }
 
 const predefinedTips: MemoryTip[] = [
-  { id: 'tip1', text: "Divida a rotina em seções curtas.", icon: Scissors },
+  { id: 'tip1', text: "Divida a rotina em secções curtas.", icon: Scissors },
   { id: 'tip2', text: "Associe movimentos a palavras-chave ou imagens mentais.", icon: Brain },
   { id: 'tip3', text: "Repita os passos principais em voz alta.", icon: Repeat },
   { id: 'tip4', text: "Pratique frequentemente em frente a um espelho ou gravando vídeos.", icon: Video }
@@ -38,7 +38,7 @@ export function MemoryTipsCard() {
         <CardTitle className="flex items-center">
           <Lightbulb className="mr-2 h-5 w-5 text-yellow-400" /> Dicas Rápidas de Memória
         </CardTitle>
-        <CardDescription>Melhore sua capacidade de lembrar hoje.</CardDescription>
+        <CardDescription>Melhore a sua capacidade de lembrar hoje.</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -69,3 +69,4 @@ export function MemoryTipsCard() {
     </Card>
   );
 }
+

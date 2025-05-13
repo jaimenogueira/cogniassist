@@ -36,8 +36,8 @@ const productivityTips = [
    {
     id: 'changeEnv',
     title: 'Mude de Ambiente',
-    tip: 'Tente trabalhar de um local diferente quando se sentir preso ou desfocado.', 
-    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 12h20"/><path d="m5 12-1-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2l-1 7"/><path d="M12 12v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>, 
+    tip: 'Tente trabalhar de um local diferente quando se sentir bloqueado ou desfocado.', 
+    icon: () => <svg xmlns="http://www.w.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 12h20"/><path d="m5 12-1-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2l-1 7"/><path d="M12 12v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>, 
     bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
     iconColor: 'text-yellow-500 dark:text-yellow-400',
   },
@@ -52,7 +52,7 @@ const productivityTips = [
   {
     id: 'restProductive',
     title: 'Descansar é Produtivo',
-    tip: 'Fazer pausas ajuda seu cérebro a processar e reter informações melhor.', 
+    tip: 'Fazer pausas ajuda o seu cérebro a processar e reter informações melhor.', 
     icon: Brain, 
     bgColor: 'bg-purple-100 dark:bg-purple-900/30',
     iconColor: 'text-purple-500 dark:text-purple-400',
@@ -88,10 +88,10 @@ export default function SuggestionsPage() {
 
   const mockFocusHistory = "Foco alto entre 9h - 11h. Foco baixo por volta das 14h. Geralmente termina tarefas rapidamente pela manhã.";
   const mockPastCompletion = "Concluído 'Relatório do Projeto' às 10:30 de ontem. Finalizado 'Preparação Chamada Cliente' às 9:15 de hoje.";
-  const mockTaskHistory = "Concluído: Relatório do Projeto (2h), Preparação Chamada Cliente (1h). Em Progresso: Pesquisa de Mercado (Est. 3h). Perdido: E-mail de acompanhamento (venceu ontem). Hábito: Prática de Idioma (última vez há 3 dias).";
+  const mockTaskHistory = "Concluído: Relatório do Projeto (2h), Preparação Chamada Cliente (1h). Em Curso: Pesquisa de Mercado (Est. 3h). Perdido: E-mail de acompanhamento (venceu ontem). Hábito: Prática de Idioma (última vez há 3 dias).";
   const mockFocusPatterns = "Pico de foco 9-11h. Queda por volta das 14h. Frequentemente distraído por notificações à tarde.";
-  const mockUserHabits = "Usuário frequentemente trabalha até tarde, verifica e-mails logo cedo. Ocasionalmente esquece de fazer pausas durante longas sessões de trabalho. Prefere lembretes visuais.";
-  const mockCalendarEvents = "Reunião de equipe às 14h hoje. Consulta no dentista amanhã às 10h.";
+  const mockUserHabits = "Utilizador frequentemente trabalha até tarde, verifica e-mails logo cedo. Ocasionalmente esquece-se de fazer pausas durante longas sessões de trabalho. Prefere lembretes visuais.";
+  const mockCalendarEvents = "Reunião de equipa às 14h hoje. Consulta no dentista amanhã às 10h.";
 
   const fetchTimeSuggestions = useCallback(async () => {
     setIsLoadingTimes(true);
@@ -107,12 +107,12 @@ export default function SuggestionsPage() {
       setTimeSuggestions(result);
     } catch (err) {
       console.error('Erro ao buscar sugestões de horários:', err);
-      setErrorTimes('Falha ao carregar sugestões de horários. Usando sugestões padrão.');
+      setErrorTimes('Falha ao carregar sugestões de horários. A utilizar sugestões padrão.');
       setTimeSuggestions({
         timeBlocks: [
-          { title: 'Foco Matinal', timeRange: '8h – 11h', description: 'Ideal para trabalho focado e tarefas que exigem alta concentração e engajamento cognitivo.' },
+          { title: 'Foco Matinal', timeRange: '8h – 11h', description: 'Ideal para trabalho focado e tarefas que exigem alta concentração e empenho cognitivo.' },
           { title: 'Ritmo do Meio-dia', timeRange: '12h – 15h', description: 'Adequado para reuniões, comunicação e trabalho colaborativo, quando os níveis de energia permanecem estáveis.' },
-          { title: 'Criatividade Noturna', timeRange: '18h – 21h', description: 'Uma ótima janela para pensamento criativo, brainstorming ou tarefas reflexivas.' },
+          { title: 'Criatividade Noturna', timeRange: '18h – 21h', description: 'Uma excelente janela para pensamento criativo, brainstorming ou tarefas reflexivas.' },
         ],
         reasoning: 'Sugestões padrão exibidas devido a um erro ao buscar dados personalizados.',
       });
@@ -153,7 +153,7 @@ export default function SuggestionsPage() {
       const result = await generateUserReminders(input);
       setUserReminders(result);
     } catch (err) {
-      console.error('Erro ao buscar lembretes do usuário:', err);
+      console.error('Erro ao buscar lembretes do utilizador:', err);
       setErrorReminders('Falha ao carregar lembretes inteligentes.');
       setUserReminders({
         reminders: ["Não foi possível gerar lembretes inteligentes no momento. Verifique mais tarde!"],
@@ -217,7 +217,7 @@ export default function SuggestionsPage() {
       </header>
 
        <p className="text-muted-foreground">
-         Deixe a IA analisar seus padrões e sugerir horários, pausas e lembretes ideais para melhorar sua produtividade e bem-estar.
+         Deixe a IA analisar os seus padrões e sugerir horários, pausas e lembretes ideais para melhorar a sua produtividade e bem-estar.
        </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -287,7 +287,7 @@ export default function SuggestionsPage() {
                     <CardTitle className="flex items-center text-lg">
                         <Coffee className="mr-2 h-5 w-5 text-amber-600" /> Dica de Produtividade
                     </CardTitle>
-                    <CardDescription className="text-xs">Uma nova dica para otimizar seu fluxo de trabalho.</CardDescription>
+                    <CardDescription className="text-xs">Uma nova dica para otimizar o seu fluxo de trabalho.</CardDescription>
                 </div>
                 <Button onClick={handleRefreshStaticTip} variant="ghost" size="icon" className="h-8 w-8 shrink-0" title="Próxima Dica" disabled={isLoadingBreaks && !currentProdTip}>
                     <RefreshCw className={cn("h-4 w-4", isLoadingBreaks && !currentProdTip && "animate-spin")} />
@@ -327,7 +327,7 @@ export default function SuggestionsPage() {
                     <p className="font-semibold text-foreground">Pausa Sugerida pela IA:</p>
                     <p className="text-muted-foreground"><span className="font-medium text-foreground/80">Recomendação:</span> {breakRecommendations.breakRecommendation}</p>
                     <p className="text-muted-foreground"><span className="font-medium text-foreground/80">Técnica:</span> {breakRecommendations.productivityTechnique}</p>
-                    <p className="text-muted-foreground italic"><span className="font-medium text-foreground/80">Justificativa:</span> {breakRecommendations.reasoning}</p>
+                    <p className="text-muted-foreground italic"><span className="font-medium text-foreground/80">Justificação:</span> {breakRecommendations.reasoning}</p>
                 </div>
               </CardFooter>
             )}
@@ -379,7 +379,7 @@ export default function SuggestionsPage() {
                     </Alert>
                 ))
             ) : (
-              <p className="text-muted-foreground text-sm text-center py-2">Nenhum lembrete inteligente para você no momento. Volte mais tarde!</p>
+              <p className="text-muted-foreground text-sm text-center py-2">Nenhum lembrete inteligente para si no momento. Volte mais tarde!</p>
             )}
              {userReminders && userReminders.reasoning && !isLoadingReminders && (
                  <p className="text-xs text-muted-foreground italic pt-2 text-center">
@@ -391,3 +391,4 @@ export default function SuggestionsPage() {
     </div>
   );
 }
+

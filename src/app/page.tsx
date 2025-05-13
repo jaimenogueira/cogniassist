@@ -17,9 +17,10 @@ import { MemoryTipsCard } from '@/components/app/memory-tips-card';
 import { TaskList } from '@/components/app/task-list';
 import { ReminderList } from '@/components/app/reminder-list';
 import { MiniCalendarView } from '@/components/app/mini-calendar-view';
+import { ProductivityTipsCarousel } from '@/components/app/productivity-tips-carousel';
 
 const initialTasks = [
-  { id: '1', title: 'Reunião Matinal (Standup)', time: '9:00', completed: false, priority: 'high' },
+  { id: '1', title: 'Reunião Matinal (Stand-up)', time: '9:00', completed: false, priority: 'high' },
   { id: '2', title: 'Revisar Proposta do Projeto', time: '11:00', completed: false, priority: 'medium' },
   { id: '3', title: 'Pausa para Almoço', time: '13:00', completed: false, priority: 'low' },
 ];
@@ -43,7 +44,7 @@ export default function Home() {
   }, [tasks]);
 
   const handleAddTask = (newTask: { title: string; date: Date; time: string; description: string; priority: 'low' | 'medium' | 'high' }) => {
-    const formattedTime = newTask.date ? new Date(newTask.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+    const formattedTime = newTask.date ? new Date(newTask.date).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }) : '';
 
     const taskToAdd = {
       id: `task-${Date.now()}`,
@@ -90,6 +91,8 @@ export default function Home() {
             </CardContent>
           </Card>
 
+          <ProductivityTipsCarousel />
+
           <Card className="shadow-sm hover:shadow-md transition-shadow">
             <CardHeader>
                 <CardTitle className="flex items-center"><CalendarDays className="mr-2 h-5 w-5 text-primary" /> Próximos Lembretes</CardTitle>
@@ -105,11 +108,11 @@ export default function Home() {
           <Card className="shadow-sm hover:shadow-md transition-shadow">
             <CardHeader>
               <CardTitle className="flex items-center"><Zap className="mr-2 h-5 w-5 text-yellow-500" /> Pulso de Produtividade</CardTitle>
-              <CardDescription>Seu nível de foco hoje.</CardDescription>
+              <CardDescription>O seu nível de foco hoje.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
                <Progress value={productivityScore} className="w-full h-3" />
-               <p className="text-sm text-muted-foreground text-center">{productivityScore}% Completo</p>
+               <p className="text-sm text-muted-foreground text-center">{productivityScore}% Concluído</p>
                <p className="text-center text-2xl">
                  {productivityScore > 75 ? '🚀' : productivityScore > 50 ? '👍' : productivityScore > 25 ? '🙂' : '🤔'}
                </p>
@@ -117,7 +120,7 @@ export default function Home() {
           </Card>
 
           <MemoryTipsCard />
-
+          
           <div className="hidden md:block">
             <MiniCalendarView />
           </div>
@@ -133,3 +136,4 @@ export default function Home() {
     </div>
   );
 }
+
