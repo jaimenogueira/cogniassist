@@ -10,23 +10,23 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Zap, Lightbulb, Brain, Activity, CalendarDays } from 'lucide-react';
+import { PlusCircle, Zap, Lightbulb, Brain, Activity, CalendarDays, User } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { AddTaskDialog } from '@/components/app/add-task-dialog';
 import { MemoryTipsCard } from '@/components/app/memory-tips-card';
 import { TaskList } from '@/components/app/task-list';
 import { ReminderList } from '@/components/app/reminder-list';
 import { MiniCalendarView } from '@/components/app/mini-calendar-view';
-import { ProductivityTipsCarousel } from '@/components/app/productivity-tips-carousel';
+// ProductivityTipsCarousel is removed as per user request to not show it on the main dashboard.
 
 const initialTasks = [
   { id: '1', title: 'Reunião Matinal (Stand-up)', time: '9:00', completed: false, priority: 'high' },
-  { id: '2', title: 'Revisar Proposta do Projeto', time: '11:00', completed: false, priority: 'medium' },
+  { id: '2', title: 'Revisar Proposta do Projecto', time: '11:00', completed: false, priority: 'medium' }, // Projecto
   { id: '3', title: 'Pausa para Almoço', time: '13:00', completed: false, priority: 'low' },
 ];
 
 const initialReminders = [
-    { id: 'r1', title: 'Ligar para Mãe', time: '18:00' },
+    { id: 'r1', title: 'Ligar para a Mãe', time: '18:00' }, // à Mãe
     { id: 'r2', title: 'Pagar Conta de Luz', time: 'Amanhã 10:00' },
 ];
 
@@ -35,6 +35,43 @@ export default function Home() {
   const [reminders, setReminders] = useState(initialReminders);
   const [productivityScore, setProductivityScore] = useState(0);
   const [isAddTaskDialogOpen, setIsAddTaskDialogOpen] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [welcomeMessage, setWelcomeMessage] = useState<string>('Bem-vindo(a) ao CogniAssist!');
+
+
+  useEffect(() => {
+    const storedSettings = localStorage.getItem('userSettings');
+    let currentUserName = 'Utilizador'; // Default name
+    if (storedSettings) {
+        try {
+            const parsedSettings = JSON.parse(storedSettings);
+            if (parsedSettings.fullName && parsedSettings.fullName.trim() !== '') {
+                currentUserName = parsedSettings.fullName.split(' ')[0]; // Get first name
+            }
+        } catch (e) {
+            console.error("Erro ao analisar userSettings do localStorage", e);
+        }
+    }
+    setUserName(currentUserName);
+  }, []);
+
+  useEffect(() => {
+    if (userName) {
+        const messages = [
+            `Bem-vindo(a), ${userName}! Vamos fazer o dia de hoje valer a pena 💪`,
+            `Olá, ${userName}! Pronto(a) para mais um dia de crescimento?`,
+            `${userName}, o seu foco começa agora. Vamos a isso!`,
+            `Que bom vê-lo(a), ${userName}! Hora de dar o seu melhor.`
+        ];
+        const randomIndex = Math.floor(Math.random() * messages.length);
+        setWelcomeMessage(messages[randomIndex]);
+    } else {
+        // Fallback or loading state if userName is null (e.g., still loading)
+        // For now, uses the initial welcomeMessage state or a generic one if userName becomes null after being set
+         setWelcomeMessage('Bem-vindo(a) ao CogniAssist! Personalize as suas configurações para uma melhor experiência.');
+    }
+  }, [userName]);
+
 
   useEffect(() => {
     const completedTasks = tasks.filter(task => task.completed).length;
@@ -71,8 +108,9 @@ export default function Home() {
   return (
     <div className="space-y-6">
       <header className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-foreground flex items-center">
-           <Brain className="mr-2 h-8 w-8 text-accent" /> Painel CogniAssist
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center">
+           {userName ? <Brain className="mr-2 h-8 w-8 text-accent" /> : <User className="mr-2 h-8 w-8 text-accent" />}
+           {welcomeMessage}
         </h1>
         <Button onClick={() => setIsAddTaskDialogOpen(true)} size="lg" className="shadow-md">
           <PlusCircle className="mr-2 h-5 w-5" /> Adicionar Tarefa
@@ -91,7 +129,7 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          <ProductivityTipsCarousel />
+          {/* ProductivityTipsCarousel removed from here */}
 
           <Card className="shadow-sm hover:shadow-md transition-shadow">
             <CardHeader>
