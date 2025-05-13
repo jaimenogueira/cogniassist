@@ -211,13 +211,15 @@ export default function TrainingPage() {
         <h1 className="text-3xl font-bold text-foreground flex items-center">
           <Dumbbell className="mr-2 h-8 w-8 text-primary" /> Monitor de Treino Físico e Cognitivo
         </h1>
-        <Button onClick={() => { setEditingWorkout(null); setIsAddWorkoutDialogOpen(true); }} size="lg" className="shadow-md">
-          <PlusCircle className="mr-2 h-5 w-5" /> Adicionar Treino Físico
-        </Button>
       </header>
       <p className="text-muted-foreground">
         Registe os seus desportos, planeie a sua rotina semanal, jogue jogos cognitivos e acompanhe o seu progresso.
       </p>
+      <div className="flex justify-end mt-4">
+        <Button onClick={() => { setEditingWorkout(null); setIsAddWorkoutDialogOpen(true); }} size="lg" className="shadow-md">
+          <PlusCircle className="mr-2 h-5 w-5" /> Adicionar Treino Físico
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="md:col-span-1 shadow-sm hover:shadow-md transition-shadow">
