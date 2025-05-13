@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import { Dumbbell, PlusCircle, Edit3, Trash2, Trophy, Run, Activity, Zap } from 'lucide-react'; // Using Activity as a placeholder for Yoga/Swimming
+import { Dumbbell, PlusCircle, Edit3, Trash2, Trophy, Footprints, Activity, Zap } from 'lucide-react'; // Using Activity as a placeholder for Yoga/Swimming, Footprints for Run
 import { AddWorkoutDialog } from '@/components/app/add-workout-dialog';
 import { WorkoutCard } from '@/components/app/workout-card';
 import { Separator } from '@/components/ui/separator';
@@ -25,7 +25,7 @@ export interface Workout {
 }
 
 const initialSports = [
-  { value: 'corrida', label: 'Corrida', icon: Run },
+  { value: 'corrida', label: 'Corrida', icon: Footprints },
   { value: 'musculacao', label: 'Musculação', icon: Dumbbell },
   { value: 'yoga', label: 'Yoga', icon: Activity }, // Placeholder
   { value: 'natacao', label: 'Natação', icon: Activity }, // Placeholder
@@ -46,7 +46,26 @@ export default function TrainingPage() {
     if (savedSport) setPreferredSport(savedSport);
 
     const savedRoutine = localStorage.getItem('weeklyRoutine');
-    if (savedRoutine) setWeeklyRoutine(JSON.parse(savedRoutine));
+    if (savedRoutine) {
+        try {
+            const parsedRoutine = JSON.parse(savedRoutine);
+            // Map over parsed routine to ensure sportIcon is correctly assigned if it was stringified
+            const routineWithIcons = parsedRoutine.map((workout: Workout) => {
+                const sportDetails = initialSports.find(s => 
+                    s.label.toLowerCase() === workout.name.toLowerCase().split(' ')[0] || // crude match
+                    (workout.sportIcon && typeof workout.sportIcon === 'string' && s.label === workout.sportIcon) // if sportIcon was stored as string name
+                );
+                return {
+                    ...workout,
+                    sportIcon: sportDetails ? sportDetails.icon : Activity
+                };
+            });
+            setWeeklyRoutine(routineWithIcons);
+        } catch (e) {
+            console.error("Failed to parse weekly routine from localStorage", e);
+            setWeeklyRoutine([]);
+        }
+    }
     
     const savedPoints = localStorage.getItem('totalPoints');
     if (savedPoints) setTotalPoints(parseInt(savedPoints, 10));
@@ -58,7 +77,9 @@ export default function TrainingPage() {
   }, [preferredSport]);
 
   useEffect(() => {
-    localStorage.setItem('weeklyRoutine', JSON.stringify(weeklyRoutine));
+    // Stringify sportIcon in a way that can be rehydrated if needed, or simplify what's stored
+    const routineToSave = weeklyRoutine.map(w => ({...w, sportIcon: w.sportIcon ? w.sportIcon.displayName || (w.sportIcon as Function).name : undefined }));
+    localStorage.setItem('weeklyRoutine', JSON.stringify(routineToSave));
   }, [weeklyRoutine]);
 
   useEffect(() => {
@@ -66,19 +87,19 @@ export default function TrainingPage() {
   }, [totalPoints]);
 
   const handleAddOrUpdateWorkout = (workoutData: Omit<Workout, 'id' | 'status' | 'sportIcon'> & { id?: string }) => {
-    const sportDetails = initialSports.find(s => s.value === preferredSport);
-    const workoutWithIcon: Omit<Workout, 'id' | 'status'> = {
+    const sportDetails = initialSports.find(s => s.value === preferredSport) || initialSports.find(s => s.label.toLowerCase() === workoutData.name.toLowerCase().split(" ")[0]);
+    const workoutWithAssignedIcon: Omit<Workout, 'id' | 'status'> = {
         ...workoutData,
         sportIcon: sportDetails?.icon || Activity,
     }
 
     if (editingWorkout) {
       setWeeklyRoutine(prev =>
-        prev.map(w => (w.id === editingWorkout.id ? { ...editingWorkout, ...workoutWithIcon } : w))
+        prev.map(w => (w.id === editingWorkout.id ? { ...editingWorkout, ...workoutWithAssignedIcon, sportIcon: workoutWithAssignedIcon.sportIcon } : w))
       );
       toast({ title: "Treino Atualizado!", description: `"${workoutData.name}" foi atualizado.` });
     } else {
-      setWeeklyRoutine(prev => [...prev, { ...workoutWithIcon, id: `workout-${Date.now()}`, status: 'pendente' }]);
+      setWeeklyRoutine(prev => [...prev, { ...workoutWithAssignedIcon, sportIcon: workoutWithAssignedIcon.sportIcon, id: `workout-${Date.now()}`, status: 'pendente' }]);
       toast({ title: "Novo Treino Adicionado!", description: `"${workoutData.name}" foi adicionado à sua rotina.` });
     }
     setEditingWorkout(null);
@@ -195,16 +216,19 @@ export default function TrainingPage() {
                 </p>
               ) : (
                 <div className="space-y-4">
-                  {weeklyRoutine.map(workout => (
-                    <WorkoutCard
-                      key={workout.id}
-                      workout={workout}
-                      onStatusChange={handleWorkoutStatusChange}
-                      onEdit={() => handleEditWorkout(workout)}
-                      onDelete={() => handleDeleteWorkout(workout.id)}
-                      sportIcon={workout.sportIcon || Activity}
-                    />
-                  ))}
+                  {weeklyRoutine.map(workout => {
+                    const EffectiveIcon = workout.sportIcon || initialSports.find(s => s.label.toLowerCase() === workout.name.toLowerCase().split(' ')[0])?.icon || Activity;
+                    return (
+                        <WorkoutCard
+                        key={workout.id}
+                        workout={workout}
+                        onStatusChange={handleWorkoutStatusChange}
+                        onEdit={() => handleEditWorkout(workout)}
+                        onDelete={() => handleDeleteWorkout(workout.id)}
+                        sportIcon={EffectiveIcon}
+                        />
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
@@ -249,3 +273,4 @@ export default function TrainingPage() {
     </div>
   );
 }
+
