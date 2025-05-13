@@ -10,7 +10,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
-import { Eye, Bell, Palette, Contrast, Volume2, Accessibility, Users, Tablet, ListChecks, Navigation, SlidersHorizontal } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { Eye, Bell, Palette, Contrast, Volume2, Accessibility, Users, Tablet, ListChecks, Navigation, SlidersHorizontal, ClipboardList, UserCircle, AlertTriangle } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useToast } from "@/hooks/use-toast";
 
@@ -36,6 +37,14 @@ export default function SettingsPage() {
     const { toast } = useToast()
     const { theme, setTheme } = useTheme ? useTheme() : { theme: 'light', setTheme: () => console.warn("next-themes não configurado") };
 
+    // Essential Information State
+    const [fullName, setFullName] = useState('');
+    const [age, setAge] = useState('');
+    const [gender, setGender] = useState('');
+    const [cognitiveGoal, setCognitiveGoal] = useState('');
+    const [essentialInfoSaved, setEssentialInfoSaved] = useState(false);
+
+    // Existing Settings State
     const [cognitiveMode, setCognitiveMode] = useState('standard'); 
     const [notificationFrequency, setNotificationFrequency] = useState('medium');
     const [notificationType, setNotificationType] = useState({ sound: true, visual: true, vibration: false });
@@ -53,36 +62,64 @@ export default function SettingsPage() {
     }, [useHighContrast]);
 
 
-     const handleSaveChanges = () => {
-        console.log('Salvando configurações:', {
-            cognitiveMode,
-            notificationFrequency,
-            notificationType,
-            theme,
-            useHighContrast,
-            cognitiveAssistSettings: cognitiveMode === 'assist' ? cognitiveAssistSettings : undefined,
-        });
+     const handleSaveChanges = (isContinuingFromEssential = false) => {
+        if (isContinuingFromEssential) {
+            if (!fullName.trim() || !age.trim() || !cognitiveGoal.trim()) {
+                toast({
+                  title: "Campos Obrigatórios",
+                  description: "Por favor, preencha Nome Completo, Idade e Objetivo Cognitivo.",
+                  variant: "destructive",
+                });
+                return false;
+            }
+        }
 
-        localStorage.setItem('userSettings', JSON.stringify({
+        const settingsToSave = {
+            fullName,
+            age,
+            gender,
+            cognitiveGoal,
+            essentialInfoSaved: isContinuingFromEssential ? true : essentialInfoSaved,
             cognitiveMode,
             notificationFrequency,
             notificationType,
             theme,
             useHighContrast,
             cognitiveAssistSettings: cognitiveMode === 'assist' ? cognitiveAssistSettings : initialCognitiveAssistSettings,
-        }));
+        };
 
-        toast({
-          title: "Configurações Salvas",
-          description: "Suas preferências foram atualizadas.",
-        })
+        localStorage.setItem('userSettings', JSON.stringify(settingsToSave));
+
+        if (isContinuingFromEssential) {
+             setEssentialInfoSaved(true);
+             toast({
+                title: "Informações Essenciais Salvas",
+                description: "Agora você pode configurar o restante das suas preferências.",
+             });
+        } else {
+            toast({
+              title: "Configurações Salvas",
+              description: "Suas preferências foram atualizadas.",
+            });
+        }
+        return true;
       };
+
+      const handleSaveEssentialAndContinue = () => {
+        handleSaveChanges(true);
+      }
 
       useEffect(() => {
         const savedSettings = localStorage.getItem('userSettings');
         if (savedSettings) {
           try {
             const parsedSettings = JSON.parse(savedSettings);
+            setFullName(parsedSettings.fullName || '');
+            setAge(parsedSettings.age || '');
+            setGender(parsedSettings.gender || '');
+            setCognitiveGoal(parsedSettings.cognitiveGoal || '');
+            setEssentialInfoSaved(parsedSettings.essentialInfoSaved || false);
+
             setCognitiveMode(parsedSettings.cognitiveMode || 'standard');
             setNotificationFrequency(parsedSettings.notificationFrequency || 'medium');
             setNotificationType(parsedSettings.notificationType || { sound: true, visual: true, vibration: false });
@@ -95,10 +132,11 @@ export default function SettingsPage() {
             }
           } catch (error) {
             console.error("Falha ao analisar configurações salvas:", error);
+            setEssentialInfoSaved(false); // Fallback if parsing fails
           }
         }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [setTheme]); // Removed useTheme from dependency array as it's a hook, not a state/prop
+      }, [setTheme]);
 
 
   return (
@@ -112,6 +150,57 @@ export default function SettingsPage() {
         </p>
       </header>
 
+      <Card className="shadow-lg border-accent border-2">
+        <CardHeader>
+          <CardTitle className="flex items-center text-xl"><ClipboardList className="mr-2 h-6 w-6 text-accent" /> Informações Essenciais</CardTitle>
+          <CardDescription>Estes dados são usados para personalizar sua experiência no CogniAssist. Por favor, preencha para continuar.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+            <div>
+                <Label htmlFor="fullName">Nome Completo <span className="text-destructive">*</span></Label>
+                <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Seu nome completo" className="mt-1" />
+                <p className="text-xs text-muted-foreground mt-1">Como devemos te chamar?</p>
+            </div>
+            <div>
+                <Label htmlFor="age">Idade <span className="text-destructive">*</span></Label>
+                <Input id="age" type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="Sua idade" className="mt-1" />
+                 <p className="text-xs text-muted-foreground mt-1">Sua idade nos ajuda a adaptar sugestões.</p>
+            </div>
+            <div>
+                <Label htmlFor="gender">Gênero</Label>
+                <Select value={gender} onValueChange={setGender}>
+                    <SelectTrigger id="gender" className="w-full mt-1">
+                        <SelectValue placeholder="Selecione seu gênero (opcional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="male">Masculino</SelectItem>
+                        <SelectItem value="female">Feminino</SelectItem>
+                        <SelectItem value="prefer_not_to_say">Prefiro não dizer</SelectItem>
+                        <SelectItem value="other">Outro</SelectItem>
+                    </SelectContent>
+                </Select>
+                 <p className="text-xs text-muted-foreground mt-1">Esta informação é opcional.</p>
+            </div>
+            <div>
+                <Label htmlFor="cognitiveGoal">Qual seu principal objetivo cognitivo? <span className="text-destructive">*</span></Label>
+                <Textarea 
+                    id="cognitiveGoal" 
+                    value={cognitiveGoal} 
+                    onChange={(e) => setCognitiveGoal(e.target.value)} 
+                    placeholder="ex: Melhorar foco, memória, atenção, organização, controle de ansiedade..." 
+                    className="mt-1"
+                />
+                <p className="text-xs text-muted-foreground mt-1">Seu objetivo principal guia nossas sugestões de IA.</p>
+            </div>
+             <Button onClick={handleSaveEssentialAndContinue} size="lg" className="w-full mt-2">
+                Salvar Informações Essenciais e Continuar
+             </Button>
+        </CardContent>
+      </Card>
+
+    {essentialInfoSaved && (
+    <>
+      <Separator />
       <Card className="shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center"><Eye className="mr-2 h-5 w-5 text-primary" /> Perfil Cognitivo</CardTitle>
@@ -299,7 +388,7 @@ export default function SettingsPage() {
            <CardDescription>Personalize a aparência do aplicativo.</CardDescription>
          </CardHeader>
          <CardContent className="space-y-4">
-            {useTheme && setTheme && ( // ensure setTheme is available
+            {useTheme && setTheme && ( 
                  <div>
                     <Label className="block mb-2">Tema</Label>
                     <RadioGroup value={theme} onValueChange={setTheme} className="flex space-x-4">
@@ -332,8 +421,11 @@ export default function SettingsPage() {
        </Card>
 
         <div className="flex justify-end pt-4">
-            <Button onClick={handleSaveChanges} size="lg">Salvar Alterações</Button>
+            <Button onClick={() => handleSaveChanges(false)} size="lg">Salvar Todas as Alterações</Button>
         </div>
+    </>
+    )}
     </div>
   );
 }
+
