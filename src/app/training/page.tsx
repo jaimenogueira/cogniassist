@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import { Dumbbell, PlusCircle, Edit3, Trash2, Trophy, Footprints, Activity, Zap } from 'lucide-react'; // Using Activity as a placeholder for Yoga/Swimming, Footprints for Run
+import { Dumbbell, PlusCircle, Edit3, Trash2, Trophy, Footprints, Activity, Zap } from 'lucide-react';
 import { AddWorkoutDialog } from '@/components/app/add-workout-dialog';
 import { WorkoutCard } from '@/components/app/workout-card';
 import { Separator } from '@/components/ui/separator';
@@ -27,8 +27,8 @@ export interface Workout {
 const initialSports = [
   { value: 'corrida', label: 'Corrida', icon: Footprints },
   { value: 'musculacao', label: 'Musculação', icon: Dumbbell },
-  { value: 'yoga', label: 'Yoga', icon: Activity }, // Placeholder
-  { value: 'natacao', label: 'Natação', icon: Activity }, // Placeholder
+  { value: 'yoga', label: 'Yoga', icon: Activity }, 
+  { value: 'natacao', label: 'Natação', icon: Activity }, 
   { value: 'outro', label: 'Outro', icon: Activity },
 ];
 
@@ -49,11 +49,10 @@ export default function TrainingPage() {
     if (savedRoutine) {
         try {
             const parsedRoutine = JSON.parse(savedRoutine);
-            // Map over parsed routine to ensure sportIcon is correctly assigned if it was stringified
             const routineWithIcons = parsedRoutine.map((workout: Workout) => {
                 const sportDetails = initialSports.find(s => 
-                    s.label.toLowerCase() === workout.name.toLowerCase().split(' ')[0] || // crude match
-                    (workout.sportIcon && typeof workout.sportIcon === 'string' && s.label === workout.sportIcon) // if sportIcon was stored as string name
+                    s.label.toLowerCase() === workout.name.toLowerCase().split(' ')[0] || 
+                    (workout.sportIcon && typeof workout.sportIcon === 'string' && s.label === workout.sportIcon)
                 );
                 return {
                     ...workout,
@@ -62,7 +61,7 @@ export default function TrainingPage() {
             });
             setWeeklyRoutine(routineWithIcons);
         } catch (e) {
-            console.error("Failed to parse weekly routine from localStorage", e);
+            console.error("Falha ao analisar rotina semanal do localStorage", e);
             setWeeklyRoutine([]);
         }
     }
@@ -77,8 +76,7 @@ export default function TrainingPage() {
   }, [preferredSport]);
 
   useEffect(() => {
-    // Stringify sportIcon in a way that can be rehydrated if needed, or simplify what's stored
-    const routineToSave = weeklyRoutine.map(w => ({...w, sportIcon: w.sportIcon ? w.sportIcon.displayName || (w.sportIcon as Function).name : undefined }));
+    const routineToSave = weeklyRoutine.map(w => ({...w, sportIcon: w.sportIcon ? (w.sportIcon as Function).name || w.sportIcon.toString() : undefined }));
     localStorage.setItem('weeklyRoutine', JSON.stringify(routineToSave));
   }, [weeklyRoutine]);
 
@@ -116,23 +114,45 @@ export default function TrainingPage() {
   };
 
   const handleWorkoutStatusChange = (workoutId: string, newStatus: WorkoutStatus) => {
-    let pointsEarned = 0;
-    const oldStatus = weeklyRoutine.find(w => w.id === workoutId)?.status;
+    let pointsChange = 0;
+    const currentWorkout = weeklyRoutine.find(w => w.id === workoutId);
+    if (!currentWorkout) return;
+
+    const oldStatus = currentWorkout.status;
+
+    const ATTEND_POINTS = 10;
+    const COMPLETE_POINTS_ADDITIONAL = 15;
+    const COMPLETE_POINTS_TOTAL = ATTEND_POINTS + COMPLETE_POINTS_ADDITIONAL;
+
+    if (newStatus === 'compareceu') {
+      if (oldStatus === 'pendente') {
+        pointsChange = ATTEND_POINTS;
+      } else if (oldStatus === 'concluido') { // Unchecked "Concluído"
+        pointsChange = -COMPLETE_POINTS_ADDITIONAL;
+      }
+    } else if (newStatus === 'concluido') {
+      if (oldStatus === 'pendente') { // Should ideally go pendente -> compareceu -> concluido
+        pointsChange = COMPLETE_POINTS_TOTAL;
+      } else if (oldStatus === 'compareceu') {
+        pointsChange = COMPLETE_POINTS_ADDITIONAL;
+      }
+    } else if (newStatus === 'pendente') { // Unchecked "Compareci"
+      if (oldStatus === 'compareceu') {
+        pointsChange = -ATTEND_POINTS;
+      } else if (oldStatus === 'concluido') {
+        pointsChange = -COMPLETE_POINTS_TOTAL;
+      }
+    }
 
     setWeeklyRoutine(prev =>
-      prev.map(w => {
-        if (w.id === workoutId) {
-          if (newStatus === 'compareceu' && oldStatus === 'pendente') pointsEarned = 10;
-          if (newStatus === 'concluido' && oldStatus === 'pendente') pointsEarned = 25; // 10 for attending + 15 for completing
-          if (newStatus === 'concluido' && oldStatus === 'compareceu') pointsEarned = 15; // only additional 15
-          return { ...w, status: newStatus };
-        }
-        return w;
-      })
+      prev.map(w => (w.id === workoutId ? { ...w, status: newStatus } : w))
     );
-    setTotalPoints(prev => prev + pointsEarned);
-    if (pointsEarned > 0) {
-        toast({ title: "Progresso Registrado!", description: `Você ganhou ${pointsEarned} pontos.` });
+    setTotalPoints(prev => prev + pointsChange);
+
+    if (pointsChange > 0) {
+        toast({ title: "Progresso Registrado!", description: `Você ganhou ${pointsChange} pontos.` });
+    } else if (pointsChange < 0) {
+        toast({ title: "Progresso Atualizado", description: `Seu total de pontos foi ajustado em ${pointsChange}.` });
     }
   };
 
@@ -142,7 +162,7 @@ export default function TrainingPage() {
 
   const getSportIcon = () => {
     const sport = initialSports.find(s => s.value === preferredSport);
-    return sport?.icon || Activity; // Default icon
+    return sport?.icon || Activity; 
   };
   const SportIcon = getSportIcon();
 
@@ -186,7 +206,7 @@ export default function TrainingPage() {
               </Select>
             </div>
             <div className="space-y-1">
-              <p className="text-sm font-medium text-foreground">Pontos de Produtividade:</p>
+              <p className="text-sm font-medium text-foreground">Pontos de Treino:</p>
               <div className="flex items-center">
                  <Zap className="mr-2 h-5 w-5 text-yellow-500" />
                  <p className="text-2xl font-bold text-accent">{totalPoints}</p>
@@ -194,7 +214,7 @@ export default function TrainingPage() {
             </div>
             <div className="space-y-1">
               <p className="text-sm font-medium text-foreground">Progresso Semanal:</p>
-              <Progress value={weeklyProgress} className="h-3" />
+              <Progress value={weeklyProgress} className="h-3 transition-all duration-300" />
               <p className="text-xs text-muted-foreground text-center">{completedThisWeek}/{workoutsThisWeek} treinos ({Math.round(weeklyProgress)}%)</p>
             </div>
           </CardContent>

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { Edit3, Trash2, Clock, CalendarDays, CheckCircle2, XCircle, MinusCircle } from 'lucide-react';
+import { Edit3, Trash2, Clock, CalendarDays, CheckCircle2, MinusCircle } from 'lucide-react';
 import type { Workout, WorkoutStatus } from '@/app/training/page';
 import { cn } from '@/lib/utils';
 
@@ -19,22 +19,20 @@ interface WorkoutCardProps {
 }
 
 export function WorkoutCard({ workout, onStatusChange, onEdit, onDelete, sportIcon: SportIconComponent }: WorkoutCardProps) {
-  const SportIcon = SportIconComponent || CalendarDays; // Default icon
+  const SportIcon = SportIconComponent || CalendarDays; 
 
   const handleAttendedChange = (attended: boolean | 'indeterminate') => {
-    if (attended === true) {
+    if (attended === true) { // Checked "Compareci"
       onStatusChange(workout.id, 'compareceu');
-    } else if (workout.status === 'compareceu' || workout.status === 'concluido') {
-      // If unchecking attended, revert to pending. Also resets completed.
+    } else { // Unchecked "Compareci"
       onStatusChange(workout.id, 'pendente');
     }
   };
 
   const handleCompletedChange = (completed: boolean | 'indeterminate') => {
-     if (completed === true) {
+     if (completed === true) { // Checked "Concluído"
       onStatusChange(workout.id, 'concluido');
-    } else if (workout.status === 'concluido') {
-      // If unchecking completed, revert to attended (as they must have attended to complete)
+    } else { // Unchecked "Concluído"
       onStatusChange(workout.id, 'compareceu');
     }
   };
@@ -44,9 +42,9 @@ export function WorkoutCard({ workout, onStatusChange, onEdit, onDelete, sportIc
       case 'pendente':
         return <Badge variant="outline" className="text-xs"><MinusCircle className="mr-1 h-3 w-3" />Pendente</Badge>;
       case 'compareceu':
-        return <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-blue-100 border-blue-300"><CheckCircle2 className="mr-1 h-3 w-3" />Compareceu</Badge>;
+        return <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-700/50 dark:text-blue-200 border-blue-300 dark:border-blue-600"><CheckCircle2 className="mr-1 h-3 w-3" />Compareceu</Badge>;
       case 'concluido':
-        return <Badge variant="default" className="text-xs bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100 border-green-300"><CheckCircle2 className="mr-1 h-3 w-3" />Concluído</Badge>;
+        return <Badge variant="default" className="text-xs bg-green-100 text-green-700 dark:bg-green-700/50 dark:text-green-200 border-green-300 dark:border-green-600"><CheckCircle2 className="mr-1 h-3 w-3" />Concluído</Badge>;
       default:
         return null;
     }
@@ -83,7 +81,6 @@ export function WorkoutCard({ workout, onStatusChange, onEdit, onDelete, sportIc
                 id={`attended-${workout.id}`}
                 checked={workout.status === 'compareceu' || workout.status === 'concluido'}
                 onCheckedChange={handleAttendedChange}
-                disabled={workout.status === 'concluido'} 
                 aria-label="Marcar como compareceu"
                 />
                 <label htmlFor={`attended-${workout.id}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
