@@ -29,7 +29,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-// ProductivityTipsCarousel import removed
 import { Separator } from '@/components/ui/separator';
 
 
@@ -359,7 +358,6 @@ export default function Home() {
             </CardContent>
           </Card>
           
-          {/* ProductivityTipsCarousel removed */}
           <MemoryTipsCard />
           
           <div className="hidden md:block">
