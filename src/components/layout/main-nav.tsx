@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/s
 import { Separator } from '@/components/ui/separator';
 
 const mainNavItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/', label: 'Painel', icon: LayoutDashboard }, // Changed label from 'Dashboard' to 'Painel'
   { href: '/training', label: 'Treino', icon: Dumbbell },
   { href: '/memory-plus', label: 'Memory+', icon: Brain },
   { href: '/suggestions', label: 'Sugestões', icon: Lightbulb },
@@ -120,3 +120,4 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
     </nav>
   );
 }
+
