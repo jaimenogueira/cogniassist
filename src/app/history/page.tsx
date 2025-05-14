@@ -9,6 +9,7 @@ import { ResponsiveContainer, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, Leg
 import { ChartTooltipContent, ChartContainer, ChartConfig } from "@/components/ui/chart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { useIsMobile } from '@/hooks/use-mobile'; // Import useIsMobile
 
 const taskCompletionDataDaily = [
   { date: 'Seg', completed: 5, missed: 1 },
@@ -63,6 +64,8 @@ export default function HistoryPage() {
     const [bestFocusTime, setBestFocusTime] = useState("9h - 12h");
     const [aiInsight, setAiInsight] = useState("Tende a concentrar-se melhor antes do almoço, especialmente em tarefas complexas.");
 
+    const isMobile = useIsMobile();
+
 
     useEffect(() => {
         const completed = taskCompletionDataDaily.reduce((sum, day) => sum + day.completed, 0);
@@ -94,7 +97,7 @@ export default function HistoryPage() {
            <BarChartIcon className="mr-2 h-8 w-8 text-primary" /> Histórico e Relatórios
         </h1>
          <Button onClick={handleExportReport} variant="outline">
-           <Download className="mr-2 h-4 w-4" /> Exportar Relatório Semanal (PDF)
+           <Download className="mr-2 h-4 w-4" /> {isMobile ? 'Exportar (PDF)' : 'Exportar Relatório Semanal (PDF)'}
          </Button>
       </header>
         <p className="text-muted-foreground">
