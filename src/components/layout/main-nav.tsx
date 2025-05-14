@@ -36,7 +36,7 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="ghost" size="icon" className="md:hidden h-12 w-12"> {/* Increased button size */}
-            <Menu className="h-8 w-8" strokeWidth={2.5} /> {/* Increased icon size and thickness */}
+            <Menu className="h-9 w-9" strokeWidth={2.5} /> {/* Increased icon size and thickness */}
             <span className="sr-only">Abrir menu</span>
           </Button>
         </SheetTrigger>
