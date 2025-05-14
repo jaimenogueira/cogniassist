@@ -43,6 +43,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { useIsMobile } from '@/hooks/use-mobile'; // Import useIsMobile
 
 const taskFormSchema = z.object({
   title: z.string().min(1, { message: 'O título da tarefa é obrigatório.' }),
@@ -63,6 +64,7 @@ interface AddTaskDialogProps {
 }
 
 export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps) {
+  const isMobile = useIsMobile();
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(taskFormSchema),
     defaultValues: {
@@ -132,36 +134,63 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                     render={({ field }) => (
                         <FormItem className="flex flex-col">
                         <FormLabel>Data (Opcional)</FormLabel>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                            <FormControl>
-                                <Button
-                                variant={"outline"}
-                                className={cn(
-                                    "pl-3 text-left font-normal w-full justify-start", // Ensure button takes full width for consistent alignment
-                                    !field.value && "text-muted-foreground"
-                                )}
-                                >
-                                {field.value ? (
-                                    format(field.value, "PPP", { locale: pt })
-                                ) : (
-                                    <span>Escolha uma data</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                            </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                initialFocus
-                                locale={pt}
-                                disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} // Disable past dates
-                            />
-                            </PopoverContent>
-                        </Popover>
+                        {isMobile ? (
+                           <FormControl>
+                             <Input
+                                type="date"
+                                value={field.value ? format(field.value, 'yyyy-MM-dd') : ''}
+                                onChange={(e) => {
+                                  if (e.target.value) {
+                                    const [year, month, day] = e.target.value.split('-').map(Number);
+                                    const newDate = new Date(year, month - 1, day);
+                                    field.onChange(newDate);
+                                  } else {
+                                    field.onChange(undefined);
+                                  }
+                                }}
+                                className="w-full"
+                              />
+                           </FormControl>
+                        ) : (
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                <FormControl>
+                                    <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                        "pl-3 text-left font-normal w-full justify-start", 
+                                        !field.value && "text-muted-foreground"
+                                    )}
+                                    >
+                                    {field.value ? (
+                                        format(field.value, "PPP", { locale: pt })
+                                    ) : (
+                                        <span>Escolha uma data</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                    </Button>
+                                </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="p-0 max-w-[280px]" align="start">
+                                <Calendar
+                                    mode="single"
+                                    selected={field.value}
+                                    onSelect={field.onChange}
+                                    initialFocus
+                                    locale={pt}
+                                    disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                                    classNames={{
+                                        cell: "h-8 w-8 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                                        day: cn(
+                                          "h-8 w-8 p-0 font-normal aria-selected:opacity-100",
+                                          buttonVariants({ variant: "ghost" })
+                                        ),
+                                        head_cell: "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
+                                      }}
+                                />
+                                </PopoverContent>
+                            </Popover>
+                        )}
                         <FormMessage />
                         </FormItem>
                     )}
@@ -174,7 +203,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                                 <FormLabel>Hora (Opcional)</FormLabel>
                                 <FormControl>
                                      <div className="relative">
-                                        <Input type="time" {...field} className="pr-8 w-full"/> {/* Ensure input takes full width */}
+                                        <Input type="time" {...field} className="pr-8 w-full"/> 
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                      </div>
                                 </FormControl>

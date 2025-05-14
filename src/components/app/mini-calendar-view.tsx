@@ -19,7 +19,7 @@ interface Day {
 
 interface MiniCalendarViewProps {
   tasks: Task[];
-  reminders: Reminder[]; // Added reminders here, though not fully used yet for counting due to date structure
+  reminders: Reminder[]; 
 }
 
 export function MiniCalendarView({ tasks, reminders }: MiniCalendarViewProps) {
@@ -27,40 +27,34 @@ export function MiniCalendarView({ tasks, reminders }: MiniCalendarViewProps) {
 
   useEffect(() => {
     const today = new Date();
-    const startOfCurrentWeek = startOfWeek(today, { weekStartsOn: 1, locale: pt });
+    const startOfCurrentWeek = startOfWeek(today, { weekStartsOn: 1, locale: pt }); // Monday as start of week
 
     const days: Day[] = [];
 
     for (let i = 0; i < 7; i++) {
       const currentDate = addDays(startOfCurrentWeek, i);
       
-      // Count tasks for the current date
       const tasksForDay = tasks.filter(task => 
         task.date && 
         fnsIsSameDay(currentDate, task.date) && 
         task.status !== 'cancelled'
       );
       
-      // Placeholder for reminder counting:
-      // Reminders currently have a `time` string (e.g., "Amanhã 10:00")
-      // which is not directly parsable into a Date object for daily comparison.
-      // A more robust solution would involve adding a `date?: Date` field to the Reminder interface
-      // or implementing complex parsing for strings like "Amanhã", "Hoje", "DD/MM".
-      // For this iteration, we'll primarily focus on task counts based on their explicit dates.
+      // Reminder counting remains a placeholder due to string-based time.
       const remindersForDayCount = 0; 
       
       const itemCount = tasksForDay.length + remindersForDayCount;
 
       days.push({
         date: currentDate,
-        dayName: format(currentDate, 'E', { locale: pt }),
+        dayName: format(currentDate, 'E', { locale: pt }), // Short day name e.g., Seg
         dayNumber: format(currentDate, 'd', { locale: pt }),
         isCurrentDay: isToday(currentDate),
         itemCount: itemCount,
       });
     }
     setWeekDays(days);
-  }, [tasks, reminders]); // Depend on tasks and reminders
+  }, [tasks, reminders]); 
 
 
   if (weekDays.length === 0) {
@@ -79,11 +73,8 @@ export function MiniCalendarView({ tasks, reminders }: MiniCalendarViewProps) {
   }
 
   const handleDayClick = (date: Date) => {
-    // Placeholder for future functionality:
-    // e.g., open a dialog or filter tasks for the selected date
-    console.log(`Dia selecionado: ${format(date, 'PPP', { locale: pt })}`);
-    // You could set state here to show tasks for the selected day elsewhere
-    // or trigger a modal/popover.
+    console.log(`Dia selecionado: ${format(date, 'PPP', { locale: pt })}. Items: ${weekDays.find(d => fnsIsSameDay(d.date, date))?.itemCount || 0}`);
+    // Future: Implement logic to show tasks/reminders for this day.
   };
 
   return (
@@ -94,48 +85,50 @@ export function MiniCalendarView({ tasks, reminders }: MiniCalendarViewProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-7 gap-1 text-center">
-          {weekDays.map((day) => (
-            <div
-              key={day.date.toISOString()}
-              className={cn(
-                'p-1.5 md:p-2 border rounded-md flex flex-col items-center justify-start min-h-[70px] md:min-h-[90px] cursor-pointer transition-colors hover:bg-muted/50',
-                day.isCurrentDay ? 'bg-accent/30 border-accent ring-1 ring-accent' : 'bg-card border-border/50',
-              )}
-              onClick={() => handleDayClick(day.date)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleDayClick(day.date);}}
-              aria-label={`Ver itens para ${format(day.date, 'PPPP', { locale: pt })}`}
-            >
-              <p className={cn(
-                  'text-xs font-medium capitalize', 
-                  day.isCurrentDay ? 'text-accent-foreground font-semibold' : 'text-muted-foreground'
+        <div className="overflow-x-auto pb-2"> {/* Added overflow-x-auto for horizontal scrolling on small screens */}
+            <div className="grid grid-cols-7 gap-1 text-center min-w-[320px]"> {/* Ensure minimum width for grid items */}
+            {weekDays.map((day) => (
+                <div
+                key={day.date.toISOString()}
+                className={cn(
+                    'p-1.5 md:p-2 border rounded-md flex flex-col items-center justify-start min-h-[70px] md:min-h-[90px] cursor-pointer transition-colors hover:bg-muted/50',
+                    day.isCurrentDay ? 'bg-accent/30 border-accent ring-1 ring-accent' : 'bg-card border-border/50',
                 )}
-              >
-                {day.dayName.substring(0,3)}
-              </p>
-              <p className={cn(
-                  'text-lg md:text-xl font-bold mt-0.5',
-                   day.isCurrentDay ? 'text-accent-foreground' : 'text-foreground'
-                 )}
-              >
-                {day.dayNumber}
-              </p>
-              <div className="mt-1 h-4 flex items-center justify-center w-full">
-                {day.itemCount > 0 && (
-                  <div 
-                    className={cn(
-                        'h-2 w-2 rounded-full opacity-90',
-                        day.isCurrentDay ? 'bg-accent-foreground' : 'bg-primary'
+                onClick={() => handleDayClick(day.date)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleDayClick(day.date);}}
+                aria-label={`Ver itens para ${format(day.date, 'PPPP', { locale: pt })}, ${day.itemCount} item(s)`}
+                >
+                <p className={cn(
+                    'text-xs font-medium capitalize', 
+                    day.isCurrentDay ? 'text-accent-foreground font-semibold' : 'text-muted-foreground'
                     )}
-                    title={`${day.itemCount} item(s) neste dia`}
-                    data-ai-hint="indicador evento"
-                  />
-                )}
-              </div>
+                >
+                    {day.dayName.substring(0,3)}
+                </p>
+                <p className={cn(
+                    'text-lg md:text-xl font-bold mt-0.5',
+                    day.isCurrentDay ? 'text-accent-foreground' : 'text-foreground'
+                    )}
+                >
+                    {day.dayNumber}
+                </p>
+                <div className="mt-1 h-4 flex items-center justify-center w-full">
+                    {day.itemCount > 0 && (
+                    <div 
+                        className={cn(
+                            'h-2 w-2 rounded-full opacity-90',
+                            day.isCurrentDay ? 'bg-accent-foreground' : 'bg-primary'
+                        )}
+                        title={`${day.itemCount} item(s) neste dia`}
+                        data-ai-hint="indicador evento"
+                    />
+                    )}
+                </div>
+                </div>
+            ))}
             </div>
-          ))}
         </div>
         <p className="text-xs text-muted-foreground text-center mt-2">
           Semana actual: {weekDays[0] ? format(weekDays[0].date, 'd MMM', { locale: pt }) : ''} - {weekDays[6] ? format(weekDays[6].date, 'd MMM, yyyy', { locale: pt }) : ''}
@@ -144,4 +137,3 @@ export function MiniCalendarView({ tasks, reminders }: MiniCalendarViewProps) {
     </Card>
   );
 }
-
