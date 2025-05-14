@@ -281,12 +281,12 @@ export default function Home() {
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-wrap justify-between items-center gap-y-2">
+      <header className="flex flex-col items-stretch gap-y-2 md:flex-row md:justify-between md:items-center">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center">
            {userName && userName !== 'Utilizador' ? <Brain className="mr-2 h-8 w-8 text-accent shrink-0" /> : <User className="mr-2 h-8 w-8 text-accent shrink-0" />}
            <span className="truncate max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">{welcomeMessage}</span>
         </h1>
-        <Button onClick={() => setIsAddTaskDialogOpen(true)} size="lg" className="shadow-md shrink-0">
+        <Button onClick={() => setIsAddTaskDialogOpen(true)} size="lg" className="shadow-md shrink-0 self-end md:self-auto">
           <PlusCircle className="mr-2 h-5 w-5" /> Adicionar Tarefa
         </Button>
       </header>
