@@ -37,7 +37,7 @@ const productivityTips = [
     id: 'changeEnv',
     title: 'Mude de Ambiente',
     tip: 'Tente trabalhar de um local diferente quando se sentir bloqueado ou desfocado.', 
-    icon: () => <svg xmlns="http://www.w.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 12h20"/><path d="m5 12-1-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2l-1 7"/><path d="M12 12v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>, 
+    icon: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 12h20"/><path d="m5 12-1-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2l-1 7"/><path d="M12 12v8a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-8"/></svg>, 
     bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
     iconColor: 'text-yellow-500 dark:text-yellow-400',
   },
@@ -193,6 +193,7 @@ export default function SuggestionsPage() {
       }
     }, 7000); 
     return () => clearInterval(intervalId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoadingBreaks, productivityTips.length]); 
 
   const handleRefreshAll = () => {
@@ -208,7 +209,7 @@ export default function SuggestionsPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap justify-between items-center gap-4">
         <h1 className="text-3xl font-bold text-foreground flex items-center">
-           <Lightbulb className="mr-2 h-8 w-8 text-accent" /> Sugestões Inteligentes
+           <Lightbulb className="mr-2 h-9 w-9 text-accent" /> Sugestões Inteligentes
         </h1>
          <Button onClick={handleRefreshAll} variant="outline" disabled={isLoadingTimes || isLoadingBreaks || isLoadingReminders}>
            {(isLoadingTimes || isLoadingBreaks || isLoadingReminders) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -225,7 +226,7 @@ export default function SuggestionsPage() {
           <CardHeader>
             <div className="flex justify-between items-start">
                 <div>
-                    <CardTitle className="flex items-center"><Clock className="mr-2 h-5 w-5 text-primary" /> Horários Ideais para Tarefas</CardTitle>
+                    <CardTitle className="flex items-center"><Clock className="mr-2 h-6 w-6 text-primary" /> Horários Ideais para Tarefas</CardTitle>
                     <CardDescription>Com base no seu histórico de foco e ritmos circadianos.</CardDescription>
                 </div>
                 <div className="flex items-center space-x-2 pt-1">
@@ -285,7 +286,7 @@ export default function SuggestionsPage() {
             <CardHeader className="flex flex-row items-start justify-between pb-2">
                 <div className="flex-1">
                     <CardTitle className="flex items-center text-lg">
-                        <Coffee className="mr-2 h-5 w-5 text-amber-600" /> Dica de Produtividade
+                        <Coffee className="mr-2 h-6 w-6 text-amber-600" /> Dica de Produtividade
                     </CardTitle>
                     <CardDescription className="text-xs">Uma nova dica para otimizar o seu fluxo de trabalho.</CardDescription>
                 </div>
@@ -338,7 +339,7 @@ export default function SuggestionsPage() {
           <CardHeader>
             <div className="flex flex-wrap justify-between items-center gap-2">
                 <div>
-                    <CardTitle className="flex items-center"><Bell className="mr-2 h-5 w-5 text-fuchsia-500" /> Lembretes Inteligentes</CardTitle>
+                    <CardTitle className="flex items-center"><Bell className="mr-2 h-6 w-6 text-fuchsia-500" /> Lembretes Inteligentes</CardTitle>
                     <CardDescription>Lembretes gerados por IA com base nos seus hábitos e contexto.</CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
@@ -391,4 +392,3 @@ export default function SuggestionsPage() {
     </div>
   );
 }
-

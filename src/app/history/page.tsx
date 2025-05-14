@@ -94,7 +94,7 @@ export default function HistoryPage() {
     <div className="space-y-6">
       <header className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-foreground flex items-center">
-           <BarChartIcon className="mr-2 h-8 w-8 text-primary" /> Histórico e Relatórios
+           <BarChartIcon className="mr-2 h-9 w-9 text-primary" /> Histórico e Relatórios
         </h1>
          <Button onClick={handleExportReport} variant="outline">
            <Download className="mr-2 h-4 w-4" /> {isMobile ? 'Exportar (PDF)' : 'Exportar Relatório Semanal (PDF)'}
@@ -106,7 +106,7 @@ export default function HistoryPage() {
 
       <Card className="shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
-          <CardTitle className="flex items-center"><TrendingUp className="mr-2 h-5 w-5 text-accent" /> Visão Geral da Conclusão de Tarefas (Últimos 7 Dias)</CardTitle>
+          <CardTitle className="flex items-center"><TrendingUp className="mr-2 h-6 w-6 text-accent" /> Visão Geral da Conclusão de Tarefas (Últimos 7 Dias)</CardTitle>
           <CardDescription>Comparando tarefas concluídas vs. perdidas diariamente.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -145,7 +145,7 @@ export default function HistoryPage() {
          <CardHeader className="items-start gap-2 space-y-0">
             <div className="flex w-full justify-between items-start">
                 <div>
-                    <CardTitle className="flex items-center"><TrendingUp className="mr-2 h-5 w-5 text-blue-500" /> Tendências de Produtividade (Mensal)</CardTitle>
+                    <CardTitle className="flex items-center"><TrendingUp className="mr-2 h-6 w-6 text-blue-500" /> Tendências de Produtividade (Mensal)</CardTitle>
                     <CardDescription>Visualizando o seu foco, eficiência e taxas de conclusão.</CardDescription>
                 </div>
                 <Select value={selectedMonth} onValueChange={setSelectedMonth}>
@@ -230,22 +230,22 @@ export default function HistoryPage() {
 
       <Card className="shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
-          <CardTitle className="flex items-center"><Award className="mr-2 h-5 w-5 text-yellow-500" /> Conquistas e Recompensas</CardTitle>
+          <CardTitle className="flex items-center"><Award className="mr-2 h-6 w-6 text-yellow-500" /> Conquistas e Recompensas</CardTitle>
           <CardDescription>Ganhe emblemas pela sua consistência e progresso!</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4 items-center justify-center">
           <div className="text-center p-3 border rounded-lg bg-secondary w-24">
-            <Award className="h-8 w-8 text-yellow-500 mx-auto mb-1" />
+            <Award className="h-8 w-8 text-yellow-500 mx-auto mb-1" data-ai-hint="troféu prémio" />
             <p className="text-xs font-medium">Início de Sequência</p>
             <p className="text-xs text-muted-foreground">Complete tarefas durante 3 dias seguidos</p>
           </div>
            <div className="text-center p-3 border rounded-lg bg-secondary w-24 opacity-50">
-            <Award className="h-8 w-8 text-gray-400 mx-auto mb-1" />
+            <Award className="h-8 w-8 text-gray-400 mx-auto mb-1" data-ai-hint="troféu prémio" />
             <p className="text-xs font-medium">Mestre do Foco</p>
              <p className="text-xs text-muted-foreground">5 sessões Pomodoro</p>
           </div>
            <div className="text-center p-3 border rounded-lg bg-secondary w-24 opacity-50">
-            <Award className="h-8 w-8 text-gray-400 mx-auto mb-1" />
+            <Award className="h-8 w-8 text-gray-400 mx-auto mb-1" data-ai-hint="troféu prémio" />
             <p className="text-xs font-medium">Semana Perfeita</p>
             <p className="text-xs text-muted-foreground">0 tarefas perdidas na semana</p>
           </div>
@@ -262,4 +262,3 @@ export default function HistoryPage() {
     </div>
   );
 }
-
