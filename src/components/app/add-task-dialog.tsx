@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { format } from 'date-fns';
-import { pt } from 'date-fns/locale'; // Changed to pt
+import { pt } from 'date-fns/locale';
 import { CalendarIcon, Clock } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+// Label from form component is used
 import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
@@ -47,12 +47,14 @@ import {
 const taskFormSchema = z.object({
   title: z.string().min(1, { message: 'O título da tarefa é obrigatório.' }),
   date: z.date().optional(),
-  time: z.string().optional(),
+  time: z.string().optional().refine(val => !val || /^([01]\d|2[0-3]):([0-5]\d)$/.test(val), {
+    message: "Hora inválida. Use o formato HH:mm.",
+  }),
   description: z.string().optional(),
   priority: z.enum(['low', 'medium', 'high']).default('medium'),
 });
 
-type TaskFormValues = z.infer<typeof taskFormSchema>;
+export type TaskFormValues = z.infer<typeof taskFormSchema>;
 
 interface AddTaskDialogProps {
   isOpen: boolean;
@@ -68,16 +70,33 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
       description: '',
       priority: 'medium',
       time: '',
+      // date: undefined, // Let it be undefined initially
     },
   });
+
+  // Reset form when dialog opens/closes or default values change
+  React.useEffect(() => {
+    if (isOpen) {
+        form.reset({
+            title: '',
+            description: '',
+            priority: 'medium',
+            time: '',
+            date: undefined, // Explicitly reset date
+        });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
 
   const onSubmit = (data: TaskFormValues) => {
     const taskData = {
       ...data,
-      date: data.date || new Date(), 
+      // If no date is picked, it remains undefined. If a date is picked, it's used.
+      // Time is already a string or undefined.
     };
     onAddTask(taskData);
-    form.reset(); 
+    // form.reset(); // Handled by useEffect for isOpen
     onClose(); 
   };
 
@@ -112,7 +131,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                     name="date"
                     render={({ field }) => (
                         <FormItem className="flex flex-col">
-                        <FormLabel>Data</FormLabel>
+                        <FormLabel>Data (Opcional)</FormLabel>
                         <Popover>
                             <PopoverTrigger asChild>
                             <FormControl>
@@ -139,6 +158,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                                 onSelect={field.onChange}
                                 initialFocus
                                 locale={pt}
+                                disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))} // Disable past dates
                             />
                             </PopoverContent>
                         </Popover>
@@ -213,4 +233,3 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
     </Dialog>
   );
 }
-
