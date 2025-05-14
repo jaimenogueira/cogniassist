@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Zap, Brain, Activity, CalendarDays, User } from 'lucide-react'; // Removed Lightbulb as ProductivityTipsCarousel is removed
+import { PlusCircle, Zap, Brain, Activity, CalendarDays, User } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { AddTaskDialog } from '@/components/app/add-task-dialog';
 import type { TaskFormValues } from '@/components/app/add-task-dialog';
@@ -18,7 +18,6 @@ import { MemoryTipsCard } from '@/components/app/memory-tips-card';
 import { TaskList } from '@/components/app/task-list';
 import { ReminderList } from '@/components/app/reminder-list';
 import { MiniCalendarView } from '@/components/app/mini-calendar-view';
-// import { ProductivityTipsCarousel } from '@/components/app/productivity-tips-carousel'; // Removed
 import {
   AlertDialog,
   AlertDialogAction,
@@ -197,7 +196,6 @@ export default function Home() {
             `Conto consigo, ${userName}!`,
             `Novo dia, ${userName}, mente fresca!`,
         ];
-        // Use a deterministic way to pick message based on day or user session to avoid hydration issues
         const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).valueOf()) / 86400000);
         const randomIndex = dayOfYear % messages.length;
         setWelcomeMessage(messages[randomIndex]);
@@ -208,11 +206,11 @@ export default function Home() {
 
 
   useEffect(() => {
-    const relevantTasks = todayTasks.filter(task => task.status !== 'cancelled'); // Filter only today's tasks
+    const relevantTasks = todayTasks.filter(task => task.status !== 'cancelled');
     const completedTasksCount = relevantTasks.filter(task => task.status === 'completed').length;
     const score = relevantTasks.length > 0 ? Math.round((completedTasksCount / relevantTasks.length) * 100) : 0;
     setProductivityScore(score);
-  }, [todayTasks]); // Depends on todayTasks now
+  }, [todayTasks]); 
 
   const handleAddTask = (newTaskData: TaskFormValues) => {
     const taskToAdd: Task = {
@@ -361,11 +359,6 @@ export default function Home() {
           
           <MemoryTipsCard />
           
-          {/* ProductivityTipsCarousel was removed from here based on previous requests */}
-          
-          <div className="hidden md:block">
-            <MiniCalendarView />
-          </div>
         </div>
       </div>
 
@@ -391,6 +384,10 @@ export default function Home() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <div className="mt-6">
+        <MiniCalendarView tasks={allTasks} reminders={allReminders} />
+      </div>
 
     </div>
   );
