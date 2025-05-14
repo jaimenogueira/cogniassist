@@ -125,7 +125,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                     )}
                 />
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                    <FormField
                     control={form.control}
                     name="date"
@@ -138,7 +138,7 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                                 <Button
                                 variant={"outline"}
                                 className={cn(
-                                    "pl-3 text-left font-normal",
+                                    "pl-3 text-left font-normal w-full justify-start", // Ensure button takes full width for consistent alignment
                                     !field.value && "text-muted-foreground"
                                 )}
                                 >
@@ -170,11 +170,11 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                         control={form.control}
                         name="time"
                         render={({ field }) => (
-                            <FormItem>
+                            <FormItem className="flex flex-col">
                                 <FormLabel>Hora (Opcional)</FormLabel>
                                 <FormControl>
                                      <div className="relative">
-                                        <Input type="time" {...field} className="pr-8"/>
+                                        <Input type="time" {...field} className="pr-8 w-full"/> {/* Ensure input takes full width */}
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                      </div>
                                 </FormControl>

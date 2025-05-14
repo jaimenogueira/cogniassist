@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Zap, Lightbulb, Brain, Activity, CalendarDays, User, Trash2 } from 'lucide-react';
+import { PlusCircle, Zap, Brain, Activity, CalendarDays, User } from 'lucide-react'; // Removed Lightbulb as ProductivityTipsCarousel is removed
 import { Progress } from '@/components/ui/progress';
 import { AddTaskDialog } from '@/components/app/add-task-dialog';
 import type { TaskFormValues } from '@/components/app/add-task-dialog';
@@ -18,6 +18,7 @@ import { MemoryTipsCard } from '@/components/app/memory-tips-card';
 import { TaskList } from '@/components/app/task-list';
 import { ReminderList } from '@/components/app/reminder-list';
 import { MiniCalendarView } from '@/components/app/mini-calendar-view';
+// import { ProductivityTipsCarousel } from '@/components/app/productivity-tips-carousel'; // Removed
 import {
   AlertDialog,
   AlertDialogAction,
@@ -207,11 +208,11 @@ export default function Home() {
 
 
   useEffect(() => {
-    const relevantTasks = allTasks.filter(task => task.status !== 'cancelled');
+    const relevantTasks = todayTasks.filter(task => task.status !== 'cancelled'); // Filter only today's tasks
     const completedTasksCount = relevantTasks.filter(task => task.status === 'completed').length;
     const score = relevantTasks.length > 0 ? Math.round((completedTasksCount / relevantTasks.length) * 100) : 0;
     setProductivityScore(score);
-  }, [allTasks]);
+  }, [todayTasks]); // Depends on todayTasks now
 
   const handleAddTask = (newTaskData: TaskFormValues) => {
     const taskToAdd: Task = {
@@ -359,6 +360,8 @@ export default function Home() {
           </Card>
           
           <MemoryTipsCard />
+          
+          {/* ProductivityTipsCarousel was removed from here based on previous requests */}
           
           <div className="hidden md:block">
             <MiniCalendarView />
