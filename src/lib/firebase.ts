@@ -1,6 +1,7 @@
 
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth'; // Added for completeness, though not strictly needed for page.tsx error
 
 // Your Firebase project configuration
 const firebaseConfig = {
@@ -22,5 +23,6 @@ if (!getApps().length) {
 }
 
 const db = getFirestore(app);
+const auth = getAuth(app); // Initialize and export auth as well, good practice
 
-export { app, db };
+export { app, db, auth };
