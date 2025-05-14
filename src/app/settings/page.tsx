@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Eye, Bell, Palette, Contrast, Volume2, Accessibility, Users, Tablet, ListChecks, Navigation, SlidersHorizontal, ClipboardList, UserCircle, AlertTriangle } from 'lucide-react';
+import { Eye, Bell, Palette, Contrast, Volume2, Accessibility, Users, Tablet, ListChecks, Navigation, SlidersHorizontal, ClipboardList, UserCircle, AlertTriangle, Watch } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useToast } from "@/hooks/use-toast";
 
@@ -51,6 +51,11 @@ export default function SettingsPage() {
     const [useHighContrast, setUseHighContrast] = useState(false);
     const [cognitiveAssistSettings, setCognitiveAssistSettings] = useState<CognitiveAssistSettings>(initialCognitiveAssistSettings);
 
+    // Smartwatch Integration State
+    const [isSmartwatchConnected, setIsSmartwatchConnected] = useState(false);
+    const [smartwatchDeviceName, setSmartwatchDeviceName] = useState('');
+    const [allowSmartwatchDataAccess, setAllowSmartwatchDataAccess] = useState(false);
+
 
     useEffect(() => {
         if (useHighContrast) {
@@ -86,6 +91,9 @@ export default function SettingsPage() {
             theme,
             useHighContrast,
             cognitiveAssistSettings: cognitiveMode === 'assist' ? cognitiveAssistSettings : initialCognitiveAssistSettings,
+            isSmartwatchConnected,
+            smartwatchDeviceName,
+            allowSmartwatchDataAccess,
         };
 
         localStorage.setItem('userSettings', JSON.stringify(settingsToSave));
@@ -130,6 +138,10 @@ export default function SettingsPage() {
             } else {
                 setCognitiveAssistSettings(initialCognitiveAssistSettings);
             }
+            setIsSmartwatchConnected(parsedSettings.isSmartwatchConnected || false);
+            setSmartwatchDeviceName(parsedSettings.smartwatchDeviceName || '');
+            setAllowSmartwatchDataAccess(parsedSettings.allowSmartwatchDataAccess || false);
+
           } catch (error) {
             console.error("Falha ao analisar configurações guardadas:", error);
             setEssentialInfoSaved(false); // Fallback if parsing fails
@@ -137,6 +149,26 @@ export default function SettingsPage() {
         }
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [setTheme]);
+
+    const handleConnectSmartwatch = () => {
+        setIsSmartwatchConnected(true);
+        setSmartwatchDeviceName('CogniWatch Pro'); // Mock device name
+        toast({
+            title: "Smartwatch Conectado",
+            description: "O seu CogniWatch Pro foi conectado com sucesso!",
+        });
+    };
+
+    const handleDisconnectSmartwatch = () => {
+        setIsSmartwatchConnected(false);
+        setSmartwatchDeviceName('');
+        setAllowSmartwatchDataAccess(false); // Also revoke data access on disconnect
+        toast({
+            title: "Smartwatch Desconectado",
+            description: "O seu smartwatch foi desconectado.",
+            variant: "default"
+        });
+    };
 
 
   return (
@@ -419,6 +451,48 @@ export default function SettingsPage() {
             <p className="text-sm text-muted-foreground pl-8">Aumenta o contraste de texto e elementos para melhor visibilidade.</p>
          </CardContent>
        </Card>
+
+        <Separator />
+
+        <Card className="shadow-sm">
+            <CardHeader>
+                <CardTitle className="flex items-center"><Watch className="mr-2 h-5 w-5 text-sky-500" /> Integração com Smartwatch</CardTitle>
+                <CardDescription>Conecte o seu smartwatch para personalizar ainda mais a sua experiência com dados de atividade e saúde.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                {isSmartwatchConnected ? (
+                <div className="flex items-center justify-between p-3 bg-green-100 dark:bg-green-800/40 rounded-lg border border-green-300 dark:border-green-700">
+                    <div>
+                        <p className="text-sm font-semibold text-green-700 dark:text-green-300">Conectado a: {smartwatchDeviceName}</p>
+                        {allowSmartwatchDataAccess && <p className="text-xs text-green-600 dark:text-green-400">Acesso aos dados activo.</p>}
+                    </div>
+                    <Button variant="outline" size="sm" onClick={handleDisconnectSmartwatch}>Desconectar</Button>
+                </div>
+                ) : (
+                <Button onClick={handleConnectSmartwatch} className="w-full">
+                    <Watch className="mr-2 h-4 w-4" /> Conectar Smartwatch
+                </Button>
+                )}
+                <div className="flex items-center justify-between space-x-2 pt-2">
+                <Label htmlFor="allow-smartwatch-data" className="flex flex-col space-y-1 flex-grow">
+                    <span>Permitir Acesso aos Dados</span>
+                    <span className="font-normal leading-snug text-muted-foreground text-xs">
+                    Permite que o CogniAssist utilize dados como frequência cardíaca, passos e sono para melhores recomendações.
+                    </span>
+                </Label>
+                <Switch
+                    id="allow-smartwatch-data"
+                    checked={allowSmartwatchDataAccess}
+                    onCheckedChange={setAllowSmartwatchDataAccess}
+                    disabled={!isSmartwatchConnected}
+                />
+                </div>
+                <p className="text-xs text-muted-foreground pt-1">
+                Pode revogar as permissões de dados a qualquer momento. A sua privacidade é importante.
+                </p>
+            </CardContent>
+        </Card>
+
 
         <div className="flex justify-end pt-4">
             <Button onClick={() => handleSaveChanges(false)} size="lg">Guardar Todas as Alterações</Button>
