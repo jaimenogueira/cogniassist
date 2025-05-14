@@ -10,7 +10,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/s
 import { Separator } from '@/components/ui/separator';
 
 const mainNavItems = [
-  { href: '/', label: 'Painel', icon: LayoutDashboard }, // Changed label from 'Dashboard' to 'Painel'
+  { href: '/', label: 'Painel', icon: LayoutDashboard },
   { href: '/training', label: 'Treino', icon: Dumbbell },
   { href: '/memory-plus', label: 'Memory+', icon: Brain },
   { href: '/suggestions', label: 'Sugestões', icon: Lightbulb },
@@ -35,8 +35,8 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
 
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="md:hidden h-10 w-10"> {/* Increased size */}
-            <Menu className="h-7 w-7" /> {/* Increased icon size */}
+          <Button variant="ghost" size="icon" className="md:hidden h-12 w-12"> {/* Increased button size */}
+            <Menu className="h-8 w-8" strokeWidth={2.5} /> {/* Increased icon size and thickness */}
             <span className="sr-only">Abrir menu</span>
           </Button>
         </SheetTrigger>
@@ -48,17 +48,17 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
                 <span>CogniAssist</span>
               </Link>
             </div>
-            <div className="flex-grow p-4 space-y-1"> {/* Reduced space-y slightly */}
+            <div className="flex-grow p-4 space-y-1">
               {mainNavItems.map((item) => (
                 <SheetClose asChild key={item.href}>
                   <Link
                     href={item.href}
                     className={cn(
-                      'flex items-center space-x-3 rounded-md px-3 py-3 text-base font-medium hover:bg-accent hover:text-accent-foreground transition-colors h-12', // Increased height for touch
+                      'flex items-center space-x-3 rounded-md px-3 py-3 text-base font-medium hover:bg-accent hover:text-accent-foreground transition-colors h-12',
                       pathname === item.href ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground' : 'text-foreground'
                     )}
                   >
-                    <item.icon className="h-6 w-6" /> {/* Increased icon size */}
+                    <item.icon className="h-6 w-6" />
                     <span>{item.label}</span>
                   </Link>
                 </SheetClose>
@@ -70,11 +70,11 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
                 <Link
                   href={settingsNavItem.href}
                   className={cn(
-                    'flex items-center space-x-3 rounded-md px-3 py-3 text-base font-medium hover:bg-accent hover:text-accent-foreground transition-colors h-12', // Increased height
+                    'flex items-center space-x-3 rounded-md px-3 py-3 text-base font-medium hover:bg-accent hover:text-accent-foreground transition-colors h-12',
                     pathname === settingsNavItem.href ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground' : 'text-foreground'
                   )}
                 >
-                  <settingsNavItem.icon className="h-6 w-6" /> {/* Increased icon size */}
+                  <settingsNavItem.icon className="h-6 w-6" />
                   <span>{settingsNavItem.label}</span>
                 </Link>
               </SheetClose>
@@ -92,12 +92,12 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
             variant={pathname === item.href ? 'default' : 'ghost'}
             size="sm"
             className={cn(
-              "justify-start h-9", // Adjusted height
+              "justify-start h-9",
               pathname === item.href && 'shadow-sm'
             )}
           >
             <Link href={item.href} className="flex items-center">
-              <item.icon className="h-5 w-5 mr-2" /> {/* Increased icon size slightly */}
+              <item.icon className="h-5 w-5 mr-2" />
               <span className="text-sm">{item.label}</span>
             </Link>
           </Button>
@@ -107,12 +107,12 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
             variant={pathname === settingsNavItem.href ? 'default' : 'ghost'}
             size="sm"
             className={cn(
-              "justify-start h-9", // Adjusted height
+              "justify-start h-9",
               pathname === settingsNavItem.href && 'shadow-sm'
             )}
           >
             <Link href={settingsNavItem.href} className="flex items-center">
-              <settingsNavItem.icon className="h-5 w-5 mr-2" /> {/* Increased icon size slightly */}
+              <settingsNavItem.icon className="h-5 w-5 mr-2" />
               <span className="text-sm">{settingsNavItem.label}</span>
             </Link>
           </Button>
@@ -120,4 +120,3 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
     </nav>
   );
 }
-
