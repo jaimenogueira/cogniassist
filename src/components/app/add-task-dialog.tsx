@@ -9,7 +9,7 @@ import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { CalendarIcon, Clock } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button'; // Added buttonVariants
 import {
   Dialog,
   DialogContent,
@@ -142,6 +142,9 @@ export function AddTaskDialog({ isOpen, onClose, onAddTask }: AddTaskDialogProps
                                 onChange={(e) => {
                                   if (e.target.value) {
                                     const [year, month, day] = e.target.value.split('-').map(Number);
+                                    // JavaScript months are 0-indexed, so subtract 1 from the month
+                                    // Ensure the date is parsed in UTC and then displayed, or consistently local.
+                                    // new Date(year, monthIndex, day) treats these as local time components.
                                     const newDate = new Date(year, month - 1, day);
                                     field.onChange(newDate);
                                   } else {
