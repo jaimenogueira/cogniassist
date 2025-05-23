@@ -3,10 +3,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Lightbulb, BarChart3, Settings, Brain, Dumbbell, Menu, LayoutDashboard, UserCircle } from 'lucide-react';
+import { LayoutDashboard, Lightbulb, BarChart3, Settings, Brain, Dumbbell, Menu, UserCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"; // Added SheetHeader, SheetTitle
 import { Separator } from '@/components/ui/separator';
 
 const mainNavItems = [
@@ -35,19 +35,29 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
 
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="md:hidden h-12 w-12"> {/* Increased button size */}
-            <Menu className="h-9 w-9" strokeWidth={2.5} /> {/* Increased icon size and thickness */}
+          <Button variant="ghost" size="icon" className="md:hidden h-12 w-12">
+            <Menu className="h-9 w-9" strokeWidth={2.5} />
             <span className="sr-only">Abrir menu</span>
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="w-3/4 sm:max-w-xs p-0">
-          <div className="flex flex-col h-full">
-            <div className="p-4 border-b">
+          <SheetHeader className="p-4 border-b">
+            <SheetTitle>
               <Link href="/" className="flex items-center space-x-2 text-lg font-semibold text-primary">
                 <Brain className="h-7 w-7" />
                 <span>CogniAssist</span>
               </Link>
-            </div>
+            </SheetTitle>
+             {/* You can add a SheetDescription here if needed */}
+          </SheetHeader>
+          <div className="flex flex-col h-full">
+            {/* The SheetHeader above will contain the title now, we can adjust this part if needed */}
+            {/* <div className="p-4 border-b">
+              <Link href="/" className="flex items-center space-x-2 text-lg font-semibold text-primary">
+                <Brain className="h-7 w-7" />
+                <span>CogniAssist</span>
+              </Link>
+            </div> */}
             <div className="flex-grow p-4 space-y-1">
               {mainNavItems.map((item) => (
                 <SheetClose asChild key={item.href}>

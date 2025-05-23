@@ -31,7 +31,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from '@/components/ui/separator';
 import { collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc, query, where, Timestamp, orderBy } from 'firebase/firestore';
-import { db } from '@/lib/firebase'; // Ensure db is exported from firebase.ts
+import { db } from '@/lib/firebase'; 
 
 // MOCK_USER_ID should be replaced with actual user ID from auth context in a real app
 const MOCK_USER_ID = 'mockUserId123';
@@ -51,7 +51,7 @@ export interface Reminder {
   id: string; // Firestore document ID
   userId?: string; // To associate reminder with a user
   title: string;
-  time: string; // Consider making this more structured, e.g., with a Date
+  time: string; 
 }
 
 export default function Home() {
@@ -71,14 +71,12 @@ export default function Home() {
   const [itemToDeleteType, setItemToDeleteType] = useState<'task' | 'reminder' | null>(null);
   const [itemToDeleteId, setItemToDeleteId] = useState<string | null>(null);
   const [itemToDeleteTitle, setItemToDeleteTitle] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(true);
 
 
   useEffect(() => {
-    setIsLoading(true);
     // For tasks
     const tasksCollectionRef = collection(db, 'users', MOCK_USER_ID, 'tasks');
-    const qTasks = query(tasksCollectionRef, orderBy("date", "asc"), orderBy("time", "asc")); // Basic sorting
+    const qTasks = query(tasksCollectionRef, orderBy("date", "asc"), orderBy("time", "asc")); 
 
     const unsubscribeTasks = onSnapshot(qTasks, (snapshot) => {
       const fetchedTasks = snapshot.docs.map(doc => {
@@ -90,16 +88,14 @@ export default function Home() {
         } as Task;
       });
       setAllTasks(fetchedTasks);
-      setIsLoading(false);
     }, (error) => {
       console.error("Error fetching tasks:", error);
       toast({ title: "Erro ao Carregar Tarefas", description: "Não foi possível buscar as suas tarefas.", variant: "destructive" });
-      setIsLoading(false);
     });
 
     // For reminders
     const remindersCollectionRef = collection(db, 'users', MOCK_USER_ID, 'reminders');
-     const qReminders = query(remindersCollectionRef); // Add sorting if needed, e.g., orderBy("time") if time is structured
+     const qReminders = query(remindersCollectionRef); 
 
     const unsubscribeReminders = onSnapshot(qReminders, (snapshot) => {
       const fetchedReminders = snapshot.docs.map(doc => ({
@@ -107,7 +103,6 @@ export default function Home() {
         ...doc.data(),
       } as Reminder));
       setAllReminders(fetchedReminders);
-      // Assuming loading completes after tasks
     }, (error) => {
       console.error("Error fetching reminders:", error);
       toast({ title: "Erro ao Carregar Lembretes", description: "Não foi possível buscar os seus lembretes.", variant: "destructive" });
@@ -122,7 +117,7 @@ export default function Home() {
 
 
   const isDateToday = (date: Task['date']): boolean => {
-    if (!date) return true; // Undated tasks are considered for today
+    if (!date) return true; 
     const taskDate = date instanceof Timestamp ? date.toDate() : new Date(date as Date);
     const today = new Date();
     return (
@@ -214,7 +209,7 @@ export default function Home() {
   }, [todayTasks]); 
 
   const handleAddTask = async (newTaskData: TaskFormValues) => {
-    const taskToAdd: Omit<Task, 'id'> = { // Omit id because Firestore generates it
+    const taskToAdd: Omit<Task, 'id'> = { 
       userId: MOCK_USER_ID,
       title: newTaskData.title,
       time: newTaskData.time || (newTaskData.date ? new Date(newTaskData.date).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }) : ''),
@@ -241,7 +236,6 @@ export default function Home() {
     try {
       const taskDocRef = doc(db, 'users', MOCK_USER_ID, 'tasks', taskId);
       await updateDoc(taskDocRef, { status: newStatus });
-      // Toast can be added here if desired
     } catch (error) {
       console.error("Error updating task status: ", error);
       toast({ title: "Erro ao Atualizar Tarefa", description: "Não foi possível atualizar o estado da tarefa.", variant: "destructive" });
@@ -309,85 +303,81 @@ export default function Home() {
         </Button>
       </header>
 
-      {isLoading && <p className="text-muted-foreground text-center py-4">A carregar dados...</p>}
+      <>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center"><Activity className="mr-2 h-6 w-6 text-primary" /> Tarefas de Hoje</CardTitle>
+                <CardDescription>O que precisa da sua atenção hoje.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <TaskList
+                  tasks={todayTasks}
+                  onToggleComplete={toggleTaskCompletion}
+                  onCancelTask={handleCancelTask}
+                  onDeleteTaskRequest={(taskId) => requestDeleteConfirmation(taskId, 'task')}
+                />
+              </CardContent>
+            </Card>
 
-      {!isLoading && (
-        <>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
-              <Card className="shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center"><Activity className="mr-2 h-6 w-6 text-primary" /> Tarefas de Hoje</CardTitle>
-                  <CardDescription>O que precisa da sua atenção hoje.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <TaskList
-                    tasks={todayTasks}
-                    onToggleComplete={toggleTaskCompletion}
-                    onCancelTask={handleCancelTask}
-                    onDeleteTaskRequest={(taskId) => requestDeleteConfirmation(taskId, 'task')}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader>
-                    <CardTitle className="flex items-center"><CalendarDays className="mr-2 h-6 w-6 text-primary" /> Próximas Tarefas e Lembretes</CardTitle>
-                    <CardDescription>O que está agendado e lembretes importantes.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {upcomingTasks.length > 0 && (
-                        <>
-                            <h3 className="text-md font-semibold mb-2 text-foreground/90">Tarefas Agendadas</h3>
-                            <TaskList
-                                tasks={upcomingTasks}
-                                onToggleComplete={toggleTaskCompletion}
-                                onCancelTask={handleCancelTask}
-                                onDeleteTaskRequest={(taskId) => requestDeleteConfirmation(taskId, 'task')}
-                            />
-                            {allReminders.length > 0 && <Separator className="my-4" />}
-                        </>
-                    )}
-                    {allReminders.length > 0 && (
-                        <>
-                            <h3 className="text-md font-semibold mt-2 mb-2 text-foreground/90">Lembretes Gerais</h3>
-                            <ReminderList
-                            reminders={allReminders}
-                            onDeleteReminderRequest={(reminderId) => requestDeleteConfirmation(reminderId, 'reminder')}
-                            />
-                        </>
-                    )}
-                    {upcomingTasks.length === 0 && allReminders.length === 0 && (
-                        <p className="text-muted-foreground text-center py-4">Nenhuma tarefa futura ou lembrete geral.</p>
-                    )}
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="space-y-6">
-              <Card className="shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex items-center"><Zap className="mr-2 h-6 w-6 text-yellow-500" /> Pulso de Produtividade</CardTitle>
-                  <CardDescription>O seu nível de foco hoje (tarefas de hoje).</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <Progress value={productivityScore} className="w-full h-3" />
-                  <p className="text-sm text-muted-foreground text-center">{productivityScore}% Concluído</p>
-                  <p className="text-center text-2xl">
-                    {productivityScore > 75 ? '🚀' : productivityScore > 50 ? '👍' : productivityScore > 25 ? '🙂' : '🤔'}
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <MemoryTipsCard />
-              
-            </div>
+            <Card className="shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader>
+                  <CardTitle className="flex items-center"><CalendarDays className="mr-2 h-6 w-6 text-primary" /> Próximas Tarefas e Lembretes</CardTitle>
+                  <CardDescription>O que está agendado e lembretes importantes.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  {upcomingTasks.length > 0 && (
+                      <>
+                          <h3 className="text-md font-semibold mb-2 text-foreground/90">Tarefas Agendadas</h3>
+                          <TaskList
+                              tasks={upcomingTasks}
+                              onToggleComplete={toggleTaskCompletion}
+                              onCancelTask={handleCancelTask}
+                              onDeleteTaskRequest={(taskId) => requestDeleteConfirmation(taskId, 'task')}
+                          />
+                          {allReminders.length > 0 && <Separator className="my-4" />}
+                      </>
+                  )}
+                  {allReminders.length > 0 && (
+                      <>
+                          <h3 className="text-md font-semibold mt-2 mb-2 text-foreground/90">Lembretes Gerais</h3>
+                          <ReminderList
+                          reminders={allReminders}
+                          onDeleteReminderRequest={(reminderId) => requestDeleteConfirmation(reminderId, 'reminder')}
+                          />
+                      </>
+                  )}
+                  {upcomingTasks.length === 0 && allReminders.length === 0 && (
+                      <p className="text-muted-foreground text-center py-4">Nenhuma tarefa futura ou lembrete geral.</p>
+                  )}
+              </CardContent>
+            </Card>
           </div>
-          <div className="mt-6">
-            <MiniCalendarView tasks={allTasks} reminders={allReminders} />
+
+          <div className="space-y-6">
+            <Card className="shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center"><Zap className="mr-2 h-6 w-6 text-yellow-500" /> Pulso de Produtividade</CardTitle>
+                <CardDescription>O seu nível de foco hoje (tarefas de hoje).</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Progress value={productivityScore} className="w-full h-3" />
+                <p className="text-sm text-muted-foreground text-center">{productivityScore}% Concluído</p>
+                <p className="text-center text-2xl">
+                  {productivityScore > 75 ? '🚀' : productivityScore > 50 ? '👍' : productivityScore > 25 ? '🙂' : '🤔'}
+                </p>
+              </CardContent>
+            </Card>
+            
+            <MemoryTipsCard />
+            
           </div>
-        </>
-      )}
+        </div>
+        <div className="mt-6">
+          <MiniCalendarView tasks={allTasks} reminders={allReminders} />
+        </div>
+      </>
 
 
       <AddTaskDialog
